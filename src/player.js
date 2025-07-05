@@ -13,12 +13,14 @@ class Player {
   // static rotateAfterLeft;
   // static rotateFromRotation;
   static initialize() {
-    // キーボードの入力を確認する
+    // Ver.1.2で変更: キーボードの入力を確認する（AキーとDキーを追加）
     this.keyStatus = {
       right: false,
       left: false,
       up: false,
-      down: false
+      down: false,
+      a: false,  // Ver.1.2で追加: 左回り回転
+      d: false   // Ver.1.2で追加: 右回り回転
     };
     // ブラウザのキーボードの入力を取得するイベントリスナを登録する
     document.addEventListener('keydown', (e) => {
@@ -28,7 +30,7 @@ class Player {
           this.keyStatus.left = true;
           e.preventDefault();
           return false;
-        case 38: // 上向きキー
+        case 38: // Ver.1.2で変更: 上向きキー（回転 → 落下ストップ）
           this.keyStatus.up = true;
           e.preventDefault();
           return false;
@@ -40,6 +42,14 @@ class Player {
           this.keyStatus.down = true;
           e.preventDefault();
           return false;
+        case 65: // Ver.1.2で追加: Aキー（左回り回転）
+          this.keyStatus.a = true;
+          e.preventDefault();
+          return false;
+        case 68: // Ver.1.2で追加: Dキー（右回り回転）
+          this.keyStatus.d = true;
+          e.preventDefault();
+          return false;
       }
     });
     document.addEventListener('keyup', (e) => {
@@ -49,7 +59,7 @@ class Player {
           this.keyStatus.left = false;
           e.preventDefault();
           return false;
-        case 38: // 上向きキー
+        case 38: // Ver.1.2で変更: 上向きキー（回転 → 落下ストップ）
           this.keyStatus.up = false;
           e.preventDefault();
           return false;
@@ -59,6 +69,14 @@ class Player {
           return false;
         case 40: // 下向きキー
           this.keyStatus.down = false;
+          e.preventDefault();
+          return false;
+        case 65: // Ver.1.2で追加: Aキー（左回り回転）
+          this.keyStatus.a = false;
+          e.preventDefault();
+          return false;
+        case 68: // Ver.1.2で追加: Dキー（右回り回転）
+          this.keyStatus.d = false;
           e.preventDefault();
           return false;
       }
@@ -99,6 +117,9 @@ class Player {
       this.keyStatus.down = false
       this.keyStatus.left = false
       this.keyStatus.right = false
+      // Ver.1.2で追加: AキーとDキーの状態もリセット
+      this.keyStatus.a = false
+      this.keyStatus.d = false
     })
     // ジェスチャーを判定して、keyStatusプロパティを更新する関数
     const gesture = (xs, ys, xe, ye) => {
@@ -183,7 +204,13 @@ class Player {
     this.movablePuyoElement.style.left = x + 'px';
     this.movablePuyoElement.style.top = y + 'px';
   }
-  static falling(isDownPressed) {
+  static falling(isDownPressed, isStopPressed) {
+    // Ver.1.2で変更: 上矢印キーが押されている間は落下を停止
+    if (isStopPressed) {
+      // 上矢印キーが押されている間は落下を停止する
+      return;
+    }
+    
     // 現状の場所の下にブロックがあるかどうか確認する
     let isBlocked = false;
     let x = this.puyoStatus.x;
@@ -240,9 +267,10 @@ class Player {
     }
   }
   static playing(frame) {
-    // まず自由落下を確認する
+    // Ver.1.2で変更: 自由落下を確認する（上矢印キーでストップ機能追加）
     // 下キーが押されていた場合、それ込みで自由落下させる
-    if (this.falling(this.keyStatus.down)) {
+    // 上矢印キーが押されている場合は落下を停止する
+    if (this.falling(this.keyStatus.down, this.keyStatus.up)) {
       // 落下が終わっていたら、ぷよを固定する
       this.setPuyoPosition();
       return 'fix';
@@ -289,8 +317,11 @@ class Player {
         this.puyoStatus.x += cx;
         return 'moving';
       }
-    } else if (this.keyStatus.up) {
-      // 回転を確認する
+    } else if (this.keyStatus.a || this.keyStatus.d) {
+      // Ver.1.2で変更: 回転を確認する（Aキー: 左回り、Dキー: 右回り）
+      const isClockwise = this.keyStatus.d; // Dキーが押されている場合は右回り（時計回り）
+      const rotationDirection = isClockwise ? -90 : 90; // 右回りは-90度、左回りは+90度
+      
       // 回せるかどうかは後で確認。まわすぞ
       const x = this.puyoStatus.x;
       const y = this.puyoStatus.y;
@@ -300,9 +331,13 @@ class Player {
       let canRotate = true;
       let cx = 0;
       let cy = 0;
-      if (rotation === 0) {
+      
+      // 回転後の角度を計算
+      const nextRotation = (rotation + rotationDirection + 360) % 360;
+      
+      if (nextRotation === 0) {
         // 右から上には100% 確実に回せる。何もしない
-      } else if (rotation === 90) {
+      } else if (nextRotation === 90) {
         // 上から左に回すときに、左にブロックがあれば右に移動する必要があるのでまず確認する
         if (y + 1 < 0 || x - 1 < 0 || x - 1 >= Config.stageCols || Stage.board[y + 1][x - 1]) {
           if (y + 1 >= 0) {
@@ -319,7 +354,7 @@ class Player {
             }
           }
         }
-      } else if (rotation === 180) {
+      } else if (nextRotation === 180) {
         // 左から下に回す時には、自分の下か左下にブロックがあれば1個上に引き上げる。まず下を確認する
         if (y + 2 < 0 || y + 2 >= Config.stageRows || Stage.board[y + 2][x]) {
           if (y + 2 >= 0) {
@@ -334,7 +369,7 @@ class Player {
             cy = -1;
           }
         }
-      } else if (rotation === 270) {
+      } else if (nextRotation === 270) {
         // 下から右に回すときは、右にブロックがあれば左に移動する必要があるのでまず確認する
         if (y + 1 < 0 || x + 1 < 0 || x + 1 >= Config.stageCols || Stage.board[y + 1][x + 1]) {
           if (y + 1 >= 0) {
@@ -368,9 +403,10 @@ class Player {
         this.rotateBeforeLeft = x * Config.puyoImgHeight;
         this.rotateAfterLeft = (x + cx) * Config.puyoImgHeight;
         this.rotateFromRotation = this.puyoStatus.rotation;
+        this.rotateDirection = rotationDirection; // Ver.1.2で追加: 回転方向を記録
         // 次の状態を先に設定しておく
         this.puyoStatus.x += cx;
-        const distRotation = (this.puyoStatus.rotation + 90) % 360;
+        const distRotation = nextRotation;
         const dCombi = [
           [1, 0],
           [0, -1],
@@ -385,8 +421,8 @@ class Player {
     return 'playing';
   }
   static moving(frame) {
-    // 移動中も自然落下はさせる
-    this.falling();
+    // Ver.1.2で変更: 移動中も自然落下はさせる（上矢印キーでストップ対応）
+    this.falling(false, this.keyStatus.up);
     const ratio = Math.min(1, (frame - this.actionStartFrame) / Config.playerMoveFrame);
     this.puyoStatus.left = ratio * (this.moveDestination - this.moveSource) + this.moveSource;
     this.setPuyoPosition();
@@ -396,14 +432,15 @@ class Player {
     return true;
   }
   static rotating(frame) {
-    // 回転中も自然落下はさせる
-    this.falling();
+    // Ver.1.2で変更: 回転中も自然落下はさせる（上矢印キーでストップ対応）
+    this.falling(false, this.keyStatus.up);
     const ratio = Math.min(1, (frame - this.actionStartFrame) / Config.playerRotateFrame);
     this.puyoStatus.left = (this.rotateAfterLeft - this.rotateBeforeLeft) * ratio + this.rotateBeforeLeft;
-    this.puyoStatus.rotation = this.rotateFromRotation + ratio * 90;
+    // Ver.1.2で変更: 回転方向を考慮した回転計算
+    this.puyoStatus.rotation = this.rotateFromRotation + ratio * this.rotateDirection;
     this.setPuyoPosition();
     if (ratio === 1) {
-      this.puyoStatus.rotation = (this.rotateFromRotation + 90) % 360;
+      this.puyoStatus.rotation = (this.rotateFromRotation + this.rotateDirection + 360) % 360;
       return false;
     }
     return true;
