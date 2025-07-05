@@ -63,4 +63,67 @@ Monaca Education
       - src/config.js: 盤面サイズの計算式を調整
       - index.html: NEXTエリアの固定サイズ調整
       - src/nextpuyo.js: NEXTぷよ表示位置の調整
+
+## 今後の表示サイズ調整箇所案内
+
+今後、さらなる表示サイズ調整が必要になった場合は、以下の箇所を修正してください：
+
+### 1. メインのサイズ調整
+**ファイル**: `src/config.js`  
+**行**: 11行目
+```javascript
+// 現在: 0.97（3%縮小）
+Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.stageRows * 0.97
+
+// さらに縮小したい場合の例:
+// 5%縮小: * 0.95
+// 7%縮小: * 0.93
+// 拡大したい場合の例:
+// 2%拡大: * 1.02
+```
+
+### 2. NEXTエリアのサイズ調整
+**ファイル**: `index.html`  
+**行**: 40-41行目
+```html
+<!-- 現在: 78px -->
+<div id="next-puyo-1" style="width: 78px; height: 78px;">
+<div id="next-puyo-2" style="width: 78px; height: 78px;">
+
+<!-- 調整例: 
+     さらに小さく → 75px
+     少し大きく → 80px -->
+```
+
+### 3. NEXTぷよ内の位置調整
+**ファイル**: `src/nextpuyo.js`  
+**行**: 73-83行目
+```javascript
+// 現在の設定
+centerPuyoImg.style.left = '19px';
+centerPuyoImg.style.top = '39px';
+movablePuyoImg.style.left = '19px';
+
+// 調整指針:
+// NEXTエリアを75pxにした場合: left = '17px', top = '37px'
+// NEXTエリアを80pxにした場合: left = '20px', top = '40px'
+// 計算式: (新しいサイズ / 78) × 現在の値
+```
+
+### 4. フォントサイズの調整（必要に応じて）
+**ファイル**: `src/config.js`  
+**行**: 6行目
+```javascript
+Config.fontHeight = 33; // スコア表示エリアの高さ
+
+// 小さくしたい場合: 30
+// 大きくしたい場合: 36
+```
+
+### 調整の目安
+- **縮小が必要**: 係数を`0.95`, `0.93`, `0.90`など小さくする
+- **拡大が必要**: 係数を`1.00`, `1.03`, `1.05`など大きくする
+- **NEXTエリア**: メインサイズに比例させるか、独立して調整
+- **位置調整**: NEXTエリアサイズに比例させる
+
 * ＜以下、改修された履歴を追記する＞
