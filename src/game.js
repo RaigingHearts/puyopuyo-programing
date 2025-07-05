@@ -17,6 +17,8 @@ function initialize() {
   Player.initialize();
   // シーンを初期状態にセットする
   Score.initialize();
+  // Ver.1.1で追加: NEXTぷよ機能の準備をする
+  NextPuyo.initialize();
   // スコア表示の準備をする
   mode = 'start';
   // フレームを初期化する

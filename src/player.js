@@ -144,10 +144,16 @@ class Player {
       // 空白でない場合は新しいぷよを置けない
       return false;
     }
-    // 新しいぷよの色を決める
-    const puyoColors = Math.max(1, Math.min(5, Config.puyoColors));
-    this.centerPuyo = Math.floor(Math.random() * puyoColors) + 1;
-    this.movablePuyo = Math.floor(Math.random() * puyoColors) + 1;
+    // Ver.1.1で変更: NEXTぷよシステムから新しいぷよの色を取得する
+    // 従来のランダム生成方式（コメントアウト）
+    // const puyoColors = Math.max(1, Math.min(5, Config.puyoColors));
+    // this.centerPuyo = Math.floor(Math.random() * puyoColors) + 1;
+    // this.movablePuyo = Math.floor(Math.random() * puyoColors) + 1;
+    
+    // NEXTぷよシステムから次のぷよを取得
+    const nextPuyo = NextPuyo.getNextPuyo();
+    this.centerPuyo = nextPuyo.center;
+    this.movablePuyo = nextPuyo.movable;
     // 新しいぷよ画像を作成する
     this.centerPuyoElement = PuyoImage.getPuyo(this.centerPuyo);
     this.movablePuyoElement = PuyoImage.getPuyo(this.movablePuyo);
