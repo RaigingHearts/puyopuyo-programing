@@ -71,8 +71,9 @@ class NextPuyo {
     centerPuyoImg.width = Config.puyoImgWidth * scale;
     centerPuyoImg.height = Config.puyoImgHeight * scale;
     centerPuyoImg.style.position = 'absolute';
-    centerPuyoImg.style.left = '20px';
-    centerPuyoImg.style.top = '40px';
+    // Ver.1.4で変更: 位置を3%縮小に合わせて調整（20px → 19px、40px → 39px）
+    centerPuyoImg.style.left = '19px';
+    centerPuyoImg.style.top = '39px';
     containerElement.appendChild(centerPuyoImg);
     
     // 動くぷよを表示（上に配置）
@@ -80,7 +81,8 @@ class NextPuyo {
     movablePuyoImg.width = Config.puyoImgWidth * scale;
     movablePuyoImg.height = Config.puyoImgHeight * scale;
     movablePuyoImg.style.position = 'absolute';
-    movablePuyoImg.style.left = '20px';
+    // Ver.1.4で変更: 位置を3%縮小に合わせて調整（20px → 19px、8pxは変更なし）
+    movablePuyoImg.style.left = '19px';
     movablePuyoImg.style.top = '8px';
     containerElement.appendChild(movablePuyoImg);
   }
