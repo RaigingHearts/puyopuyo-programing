@@ -22,10 +22,16 @@ class Stage {
     this.zenkeshiImage = zenkeshiImage;
     stageElement.appendChild(zenkeshiImage);
     const scoreElement = document.getElementById("score");
-    scoreElement.style.backgroundColor = Config.scoreBackgroundColor;
-    scoreElement.style.top = Config.puyoImgHeight * Config.stageRows + 'px';
-    scoreElement.style.width = Config.puyoImgWidth * Config.stageCols + 'px';
+    // Ver.1.3で変更: スコア表示のスタイルを新しいHTMLレイアウトに合わせて調整
+    // 従来の絶対位置指定方式（コメントアウト）
+    // scoreElement.style.backgroundColor = Config.scoreBackgroundColor;
+    // scoreElement.style.top = Config.puyoImgHeight * Config.stageRows + 'px';
+    // scoreElement.style.width = Config.puyoImgWidth * Config.stageCols + 'px';
+    // scoreElement.style.height = Config.fontHeight + "px";
+    
+    // Ver.1.3で新規: HTMLでスタイルが設定されているため、高さのみ設定
     scoreElement.style.height = Config.fontHeight + "px";
+    scoreElement.style.minWidth = Config.puyoImgWidth * Config.stageCols + 'px';
     this.scoreElement = scoreElement;
     // メモリを準備する
     this.board = [
