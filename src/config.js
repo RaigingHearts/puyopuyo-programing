@@ -9,7 +9,8 @@ Config.stageRows = 12; // ステージの縦の個数
 // フィールドサイズ追加
 // 高さが全部入るように調整
 // Ver.1.4で変更: 盤面サイズを3%縮小（0.97倍）
-Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.stageRows * 0.97
+// RaigingHeartsによるさらなる調整: （デフォルト:1.0から0.85倍へ縮小）
+Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.stageRows * 0.85
 Config.puyoImgWidth = Config.puyoImgHeight;
 Config.stageBackgroundColor = '#ffffff'; // ステージの背景色
 Config.scoreBackgroundColor = '#24c0bb'; // スコアの背景色
