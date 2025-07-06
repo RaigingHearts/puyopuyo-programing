@@ -180,6 +180,16 @@ class Player {
     this.movablePuyoElement = PuyoImage.getPuyo(this.movablePuyo);
     Stage.stageElement.appendChild(this.centerPuyoElement);
     Stage.stageElement.appendChild(this.movablePuyoElement);
+    
+    // Ver.1.5で追加: 幽霊ぷよ画像を作成する
+    this.ghostCenterPuyoElement = PuyoImage.getPuyo(this.centerPuyo);
+    this.ghostMovablePuyoElement = PuyoImage.getPuyo(this.movablePuyo);
+    // 幽霊ぷよの透明度を設定
+    this.ghostCenterPuyoElement.style.opacity = Config.ghostPuyoOpacity;
+    this.ghostMovablePuyoElement.style.opacity = Config.ghostPuyoOpacity;
+    // 幽霊ぷよをステージに追加
+    Stage.stageElement.appendChild(this.ghostCenterPuyoElement);
+    Stage.stageElement.appendChild(this.ghostMovablePuyoElement);
     // ぷよの初期配置を定める
     this.puyoStatus = {
       x: 2, // 中心ぷよの位置: 左から2列目
@@ -194,6 +204,8 @@ class Player {
     this.groundFrame = 0;
     // ぷよを描画
     this.setPuyoPosition();
+    // Ver.1.5で追加: 初期の幽霊ぷよ位置を設定
+    this.updateGhostPuyo();
     return true;
   }
   static setPuyoPosition() {
@@ -203,6 +215,70 @@ class Player {
     const y = this.puyoStatus.top - Math.sin(this.puyoStatus.rotation * Math.PI / 180) * Config.puyoImgHeight;
     this.movablePuyoElement.style.left = x + 'px';
     this.movablePuyoElement.style.top = y + 'px';
+    
+    // Ver.1.5で追加: 幽霊ぷよの位置も更新
+    this.updateGhostPuyo();
+  }
+  
+  // Ver.1.5で追加: 幽霊ぷよの着地点を計算する
+  static calculateGhostPosition() {
+    const currentX = this.puyoStatus.x;
+    const currentY = this.puyoStatus.y;
+    const dx = this.puyoStatus.dx;
+    const dy = this.puyoStatus.dy;
+    
+    // 現在の位置から下方向に障害物がないかチェックしながら着地点を探す
+    let ghostY = currentY;
+    
+    // 下方向に落下シミュレーション
+    while (ghostY < Config.stageRows) {
+      // 次の位置をチェック
+      const nextY = ghostY + 1;
+      
+      // 中心ぷよが障害物に当たるかチェック
+      if (nextY >= Config.stageRows || Stage.board[nextY][currentX]) {
+        break;
+      }
+      
+      // 動くぷよが障害物に当たるかチェック
+      const movableX = currentX + dx;
+      const movableY = nextY + dy;
+      if (movableY >= 0) { // 画面内の場合のみチェック
+        if (movableY >= Config.stageRows || movableX < 0 || movableX >= Config.stageCols || Stage.board[movableY][movableX]) {
+          break;
+        }
+      }
+      
+      ghostY = nextY;
+    }
+    
+    return ghostY;
+  }
+  
+  // Ver.1.5で追加: 幽霊ぷよの表示位置を更新する
+  static updateGhostPuyo() {
+    if (!this.ghostCenterPuyoElement || !this.ghostMovablePuyoElement) {
+      return;
+    }
+    
+    const ghostY = this.calculateGhostPosition();
+    const currentX = this.puyoStatus.x;
+    const dx = this.puyoStatus.dx;
+    const dy = this.puyoStatus.dy;
+    
+    // 幽霊ぷよの位置を設定
+    const ghostCenterLeft = currentX * Config.puyoImgWidth;
+    const ghostCenterTop = ghostY * Config.puyoImgHeight;
+    
+    this.ghostCenterPuyoElement.style.left = ghostCenterLeft + 'px';
+    this.ghostCenterPuyoElement.style.top = ghostCenterTop + 'px';
+    
+    // 動く幽霊ぷよの位置を計算
+    const ghostMovableLeft = ghostCenterLeft + Math.cos(this.puyoStatus.rotation * Math.PI / 180) * Config.puyoImgWidth;
+    const ghostMovableTop = ghostCenterTop - Math.sin(this.puyoStatus.rotation * Math.PI / 180) * Config.puyoImgHeight;
+    
+    this.ghostMovablePuyoElement.style.left = ghostMovableLeft + 'px';
+    this.ghostMovablePuyoElement.style.top = ghostMovableTop + 'px';
   }
   static falling(isDownPressed, isStopPressed) {
     // Ver.1.2で変更: 上矢印キーが押されている間は落下を停止
@@ -426,6 +502,8 @@ class Player {
     const ratio = Math.min(1, (frame - this.actionStartFrame) / Config.playerMoveFrame);
     this.puyoStatus.left = ratio * (this.moveDestination - this.moveSource) + this.moveSource;
     this.setPuyoPosition();
+    // Ver.1.5で追加: 移動中も幽霊ぷよを更新
+    this.updateGhostPuyo();
     if (ratio === 1) {
       return false;
     }
@@ -439,6 +517,8 @@ class Player {
     // Ver.1.2で変更: 回転方向を考慮した回転計算
     this.puyoStatus.rotation = this.rotateFromRotation + ratio * this.rotateDirection;
     this.setPuyoPosition();
+    // Ver.1.5で追加: 回転中も幽霊ぷよを更新
+    this.updateGhostPuyo();
     if (ratio === 1) {
       this.puyoStatus.rotation = (this.rotateFromRotation + this.rotateDirection + 360) % 360;
       return false;
@@ -466,6 +546,16 @@ class Player {
     Stage.stageElement.removeChild(this.movablePuyoElement);
     this.centerPuyoElement = null;
     this.movablePuyoElement = null;
+    
+    // Ver.1.5で追加: 幽霊ぷよ画像も削除する
+    if (this.ghostCenterPuyoElement) {
+      Stage.stageElement.removeChild(this.ghostCenterPuyoElement);
+      this.ghostCenterPuyoElement = null;
+    }
+    if (this.ghostMovablePuyoElement) {
+      Stage.stageElement.removeChild(this.ghostMovablePuyoElement);
+      this.ghostMovablePuyoElement = null;
+    }
   }
   static batankyu() {
     if (this.keyStatus.up) {
