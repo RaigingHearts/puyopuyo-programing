@@ -6,53 +6,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src *
 'unsafe-inline' 'unsafe-eval'">
-    <title>ぷよぷよの制作を体験してみよう！ Ver.1.5</title>
+    <title>ぷよぷよの制作を体験してみよう！ Ver.1.6</title>
     <link rel="stylesheet" href="components/loader.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body style="margin:0; background-color: #f0f0f0; padding: 20px;">
-    <!-- Ver.1.3で変更: 盤面全体を囲むコンテナを追加 -->
-    <div id="game-container" style="display: flex; flex-direction: column; align-items: center; max-width: 800px; margin: 0 auto;">
-        <!-- Ver.1.3で変更: 盤面とNEXTエリアを囲むコンテナ -->
-        <div id="play-area" style="
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-start; 
-            background-color: #ffffff; 
-            border: 3px solid #333333; 
-            border-radius: 10px; 
+<body style="margin:0; background-color: #f0f0f0; font-family: Arial, sans-serif;">
+    <!-- Ver.1.6で追加: メインレイアウトコンテナ -->
+    <div id="main-layout" style="display: flex; min-height: 100vh;">
+        <!-- Ver.1.6で追加: レフトサイドメニュー -->
+        <div id="left-sidebar" style="
+            width: 280px; 
+            background-color: #2c3e50; 
+            color: white; 
             padding: 20px; 
-            margin-bottom: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            overflow-y: auto;
         ">
-            <!-- Ver.1.3で変更: 盤面エリアにも枠を追加 -->
-            <div id="stage" style="
-                position: relative; 
-                overflow: hidden; 
-                background: url(img/puyo_4bg.png);
-                border: 2px solid #666666;
-                border-radius: 5px;
-            ">
+            <h2 style="margin-top: 0; color: #ecf0f1; border-bottom: 2px solid #34495e; padding-bottom: 10px;">ぷよぷよツール</h2>
+            
+            <!-- カスタム盤面セクション -->
+            <div class="menu-section" style="margin-bottom: 25px;">
+                <h3 style="color: #e74c3c; margin-bottom: 15px;">🎮 カスタム盤面</h3>
+                <button id="btn-custom-editor" style="
+                    width: 100%; 
+                    padding: 10px; 
+                    margin-bottom: 8px; 
+                    background-color: #3498db; 
+                    color: white; 
+                    border: none; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                ">📝 カスタム盤面編集</button>
+                <button id="btn-load-preset" style="
+                    width: 100%; 
+                    padding: 10px; 
+                    margin-bottom: 8px; 
+                    background-color: #9b59b6; 
+                    color: white; 
+                    border: none; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                ">📋 プリセット読み込み</button>
             </div>
-            <!-- NEXTぷよ表示エリア（Ver.1.1で追加） -->
-            <div id="next-area" style="margin-left: 20px; position: relative;">
-                <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px; text-align: center; color: #333;">NEXT</div>
-                <!-- Ver.1.4で変更: NEXTエリアのサイズを3%縮小（80px → 78px） -->
-                <div id="next-puyo-1" style="position: relative; width: 78px; height: 78px; margin-bottom: 10px; border: 2px solid #333; border-radius: 5px; background-color: #fafafa;"></div>
-                <div id="next-puyo-2" style="position: relative; width: 78px; height: 78px; border: 2px solid #333; border-radius: 5px; background-color: #fafafa;"></div>
+            
+            <!-- フィールドコード管理セクション -->
+            <div class="menu-section" style="margin-bottom: 25px;">
+                <h3 style="color: #f39c12; margin-bottom: 15px;">💾 データ管理</h3>
+                <button id="btn-save-field" style="
+                    width: 100%; 
+                    padding: 10px; 
+                    margin-bottom: 8px; 
+                    background-color: #27ae60; 
+                    color: white; 
+                    border: none; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                ">💾 盤面保存</button>
+                <button id="btn-load-field" style="
+                    width: 100%; 
+                    padding: 10px; 
+                    margin-bottom: 8px; 
+                    background-color: #f39c12; 
+                    color: white; 
+                    border: none; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                ">📂 盤面読み込み</button>
+                <button id="btn-import-field" style="
+                    width: 100%; 
+                    padding: 10px; 
+                    margin-bottom: 8px; 
+                    background-color: #e67e22; 
+                    color: white; 
+                    border: none; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                ">🌐 外部コード読み込み</button>
+            </div>
+            
+            <!-- 連鎖プレビューセクション -->
+            <div class="menu-section" style="margin-bottom: 25px;">
+                <h3 style="color: #1abc9c; margin-bottom: 15px;">⚡ 連鎖プレビュー</h3>
+                <button id="btn-chain-preview" style="
+                    width: 100%; 
+                    padding: 10px; 
+                    margin-bottom: 8px; 
+                    background-color: #1abc9c; 
+                    color: white; 
+                    border: none; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                ">🔍 連鎖プレビュー</button>
+                <button id="btn-step-chain" style="
+                    width: 100%; 
+                    padding: 10px; 
+                    margin-bottom: 8px; 
+                    background-color: #16a085; 
+                    color: white; 
+                    border: none; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    font-size: 14px;
+                ">📊 ステップ連鎖</button>
+            </div>
+            
+            <!-- 保存済みデータ表示エリア -->
+            <div class="menu-section">
+                <h3 style="color: #95a5a6; margin-bottom: 15px;">📋 保存済みデータ</h3>
+                <div id="saved-fields-list" style="
+                    max-height: 200px; 
+                    overflow-y: auto; 
+                    border: 1px solid #34495e; 
+                    border-radius: 5px; 
+                    padding: 10px; 
+                    background-color: #34495e;
+                ">
+                    <p style="margin: 0; color: #bdc3c7; text-align: center; font-size: 12px;">保存済みデータなし</p>
+                </div>
             </div>
         </div>
-        <!-- Ver.1.3で変更: スコア表示位置を盤面コンテナに合わせて調整 -->
-        <div id="score" style="
-            overflow: hidden; 
-            text-align: center; 
-            background-color: #ffffff; 
-            border: 2px solid #333333; 
-            border-radius: 5px; 
-            padding: 5px 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        "></div>
+        
+        <!-- Ver.1.6で変更: ゲームエリアコンテナ -->
+        <div id="game-area" style="flex: 1; padding: 20px;">
+            <div id="game-container" style="display: flex; flex-direction: column; align-items: center; max-width: 800px; margin: 0 auto;">
+                <!-- Ver.1.3で変更: 盤面とNEXTエリアを囲むコンテナ -->
+                <div id="play-area" style="
+                    display: flex; 
+                    justify-content: center; 
+                    align-items: flex-start; 
+                    background-color: #ffffff; 
+                    border: 3px solid #333333; 
+                    border-radius: 10px; 
+                    padding: 20px; 
+                    margin-bottom: 10px;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                ">
+                    <!-- Ver.1.3で変更: 盤面エリアにも枠を追加 -->
+                    <div id="stage" style="
+                        position: relative; 
+                        overflow: hidden; 
+                        background: url(img/puyo_4bg.png);
+                        border: 2px solid #666666;
+                        border-radius: 5px;
+                    ">
+                    </div>
+                    <!-- NEXTぷよ表示エリア（Ver.1.1で追加） -->
+                    <div id="next-area" style="margin-left: 20px; position: relative;">
+                        <div style="font-size: 16px; font-weight: bold; margin-bottom: 10px; text-align: center; color: #333;">NEXT</div>
+                        <!-- Ver.1.4で変更: NEXTエリアのサイズを3%縮小（80px → 78px） -->
+                        <div id="next-puyo-1" style="position: relative; width: 78px; height: 78px; margin-bottom: 10px; border: 2px solid #333; border-radius: 5px; background-color: #fafafa;"></div>
+                        <div id="next-puyo-2" style="position: relative; width: 78px; height: 78px; border: 2px solid #333; border-radius: 5px; background-color: #fafafa;"></div>
+                    </div>
+                </div>
+                <!-- Ver.1.3で変更: スコア表示位置を盤面コンテナに合わせて調整 -->
+                <div id="score" style="
+                    overflow: hidden; 
+                    text-align: center; 
+                    background-color: #ffffff; 
+                    border: 2px solid #333333; 
+                    border-radius: 5px; 
+                    padding: 5px 10px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                "></div>
+            </div>
+        </div>
     </div>
         <div style="display:none">
             <img src="img/puyo_1.png" id="puyo_1">
@@ -80,7 +204,15 @@
         <script src="src/puyoimage.js"></script>
         <script src="src/nextpuyo.js"></script>
         <script src="src/player.js"></script>
+        <script src="src/sidemenu.js"></script>
+        <script src="src/chain.js"></script>
         <script src="src/game.js"></script>
+        <script>
+            // Ver.1.6で追加: サイドメニューの初期化
+            window.addEventListener('load', function() {
+                SideMenu.initialize();
+            });
+        </script>
 </body>
 
 </html>
