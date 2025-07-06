@@ -17,13 +17,13 @@ Monaca Education
 * コードの変更、追加、削除などの操作は、手を加えた部分が明確になるようにコメント処理をする。
 
 ## ぷよぷよステージ表示のサイズ調整
-Cursorによる調整箇所の案内をここに記す。（応答された文章をコピーペーストしたので、マークダウン書式の調整が必要かも）
-🔧 今後の表示サイズ調整が必要な場合の調整箇所案内
+Cursorによる調整箇所の案内をここに記す。
+### 🔧 今後の表示サイズ調整が必要な場合の調整箇所案内
 ローカルGITに同期した後で、さらなる表示サイズ調整が必要になった場合は、以下の箇所を修正してください：
 
 1. メインのサイズ調整
 ファイル: src/config.js 行: 11行目
-
+```js
 // 現在: 0.97（3%縮小）
 Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.stageRows * 0.97
 
@@ -32,9 +32,10 @@ Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.stageRows *
 // 7%縮小: * 0.93
 // 拡大したい場合の例:
 // 2%拡大: * 1.02
+```
 2. NEXTエリアのサイズ調整
 ファイル: index.html 行: 40-41行目
-
+```js
 <!-- 現在: 78px -->
 <div id="next-puyo-1" style="width: 78px; height: 78px;">
 <div id="next-puyo-2" style="width: 78px; height: 78px;">
@@ -42,9 +43,10 @@ Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.stageRows *
 <!-- 調整例: 
      さらに小さく → 75px
      少し大きく → 80px -->
+```
 3. NEXTぷよ内の位置調整
 ファイル: src/nextpuyo.js 行: 73-83行目
-
+```js
 // 現在の設定
 centerPuyoImg.style.left = '19px';
 centerPuyoImg.style.top = '39px';
@@ -54,18 +56,22 @@ movablePuyoImg.style.left = '19px';
 // NEXTエリアを75pxにした場合: left = '17px', top = '37px'
 // NEXTエリアを80pxにした場合: left = '20px', top = '40px'
 // 計算式: (新しいサイズ / 78) × 現在の値
+```
 4. フォントサイズの調整（必要に応じて）
 ファイル: src/config.js 行: 6行目
-
+```js
 Config.fontHeight = 33; // スコア表示エリアの高さ
 
 // 小さくしたい場合: 30
 // 大きくしたい場合: 36
-🎯 調整の目安
-縮小が必要: 係数を0.95, 0.93, 0.90など小さくする
-拡大が必要: 係数を1.00, 1.03, 1.05など大きくする
-NEXTエリア: メインサイズに比例させるか、独立して調整
-位置調整: NEXTエリアサイズに比例させる
+```
+### 🎯 調整の目安
+* 縮小が必要: 係数を0.95, 0.93, 0.90など小さくする
+* 拡大が必要: 係数を1.00, 1.03, 1.05など大きくする
+* NEXTエリア: メインサイズに比例させるか、独立して調整
+* 位置調整: NEXTエリアサイズに比例させる
+
+
 これで、必要に応じて細かな調整が可能です！
 
 ## プログラムの改修履歴
@@ -114,7 +120,7 @@ NEXTエリア: メインサイズに比例させるか、独立して調整
     * RaigingHeartsによるさらなる調整：
       * 盤面全体の表示サイズ「3%縮小（0.97倍）」から0.85倍へさらに縮小した
       * 教本内の初期コード全文からCursorによる改修を経たコンフィグ内の計算設定から推測し、おそらく初期コードデフォルトの表示サイズであろう倍率数値をコンフィグの変更箇所コメントに記載した。
-      * これ以外のサイズ調整には手をつけていないが、Cursorから見て調整が必要であれば、適宜対応してもらいたい。
+      * NEXTぷよの表示位置を微調整（MovablePuyo（上にあるぷよ）left:15 top:0）（centerpuyo（下にあるぷよ）left:15 top:30）
     * 修正ファイル：
       - src/config.js: 盤面サイズの計算式を調整
       - index.html: NEXTエリアの固定サイズ調整
@@ -134,67 +140,4 @@ NEXTエリア: メインサイズに比例させるか、独立して調整
       - src/config.js: 幽霊ぷよの透明度設定を追加
       - src/player.js: 幽霊ぷよ機能の全面実装
       - index.html: バージョン表示の更新
-
-## 今後の表示サイズ調整箇所案内
-
-今後、さらなる表示サイズ調整が必要になった場合は、以下の箇所を修正してください：
-
-### 1. メインのサイズ調整
-**ファイル**: `src/config.js`  
-**行**: 11行目
-```javascript
-// 現在: 0.97（3%縮小）
-Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.stageRows * 0.97
-
-// さらに縮小したい場合の例:
-// 5%縮小: * 0.95
-// 7%縮小: * 0.93
-// 拡大したい場合の例:
-// 2%拡大: * 1.02
-```
-
-### 2. NEXTエリアのサイズ調整
-**ファイル**: `index.html`  
-**行**: 40-41行目
-```html
-<!-- 現在: 78px -->
-<div id="next-puyo-1" style="width: 78px; height: 78px;">
-<div id="next-puyo-2" style="width: 78px; height: 78px;">
-
-<!-- 調整例: 
-     さらに小さく → 75px
-     少し大きく → 80px -->
-```
-
-### 3. NEXTぷよ内の位置調整
-**ファイル**: `src/nextpuyo.js`  
-**行**: 73-83行目
-```javascript
-// 現在の設定
-centerPuyoImg.style.left = '19px';
-centerPuyoImg.style.top = '39px';
-movablePuyoImg.style.left = '19px';
-
-// 調整指針:
-// NEXTエリアを75pxにした場合: left = '17px', top = '37px'
-// NEXTエリアを80pxにした場合: left = '20px', top = '40px'
-// 計算式: (新しいサイズ / 78) × 現在の値
-```
-
-### 4. フォントサイズの調整（必要に応じて）
-**ファイル**: `src/config.js`  
-**行**: 6行目
-```javascript
-Config.fontHeight = 33; // スコア表示エリアの高さ
-
-// 小さくしたい場合: 30
-// 大きくしたい場合: 36
-```
-
-### 調整の目安
-- **縮小が必要**: 係数を`0.95`, `0.93`, `0.90`など小さくする
-- **拡大が必要**: 係数を`1.00`, `1.03`, `1.05`など大きくする
-- **NEXTエリア**: メインサイズに比例させるか、独立して調整
-- **位置調整**: NEXTエリアサイズに比例させる
-
 * ＜以下、改修された履歴を追記する＞
