@@ -24,6 +24,13 @@ class PuyoImage {
     this.gameOverFrame = frame;
     Stage.stageElement.appendChild(this.batankyuImage);
     this.batankyuImage.style.top = -this.batankyuImage.height + 'px';
+    
+    // Ver.1.8で追加: コンティニューテキストを表示
+    this.continueText = document.getElementById('continue-text');
+    if (this.continueText) {
+      this.continueText.style.display = 'block';
+      Stage.stageElement.appendChild(this.continueText);
+    }
   }
   static batankyu(frame) {
     const ratio = (frame - this.gameOverFrame) / Config.gameOverFrame;
@@ -32,5 +39,13 @@ class PuyoImage {
     puyoImgHeight * Config.stageRows / 2;
     this.batankyuImage.style.left = x + 'px';
     this.batankyuImage.style.top = y + 'px';
+    
+    // Ver.1.8で追加: コンティニューテキストの位置を調整
+    if (this.continueText) {
+      const textX = (Config.puyoImgWidth * Config.stageCols - this.continueText.offsetWidth) / 2;
+      const textY = Config.puyoImgHeight * Config.stageRows - 100;
+      this.continueText.style.left = textX + 'px';
+      this.continueText.style.top = textY + 'px';
+    }
   }
 }

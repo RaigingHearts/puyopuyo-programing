@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src *
 'unsafe-inline' 'unsafe-eval'">
-    <title>ぷよぷよの制作を体験してみよう！ Ver.1.7</title>
+    <title>ぷよぷよの制作を体験してみよう！ Ver.1.8</title>
     <link rel="stylesheet" href="components/loader.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -163,6 +163,35 @@
                         <!-- Ver.1.4で変更: NEXTエリアのサイズを3%縮小（80px → 78px） -->
                         <div id="next-puyo-1" style="position: relative; width: 78px; height: 78px; margin-bottom: 10px; border: 2px solid #333; border-radius: 5px; background-color: #fafafa;"></div>
                         <div id="next-puyo-2" style="position: relative; width: 78px; height: 78px; border: 2px solid #333; border-radius: 5px; background-color: #fafafa;"></div>
+                        
+                        <!-- Ver.1.8で追加: 落下コントロールボタン -->
+                        <div style="margin-top: 15px; text-align: center;">
+                            <div style="font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #333;">落下制御</div>
+                            <button id="pause-fall-btn" onclick="Player.pauseFall()" style="
+                                width: 78px; 
+                                height: 30px; 
+                                background-color: #e74c3c; 
+                                color: white; 
+                                border: none; 
+                                border-radius: 5px; 
+                                cursor: pointer; 
+                                font-size: 12px; 
+                                margin-bottom: 3px;
+                                display: inline-block;
+                            ">⏸️ 停止</button>
+                            <button id="resume-fall-btn" onclick="Player.resumeFall()" style="
+                                width: 78px; 
+                                height: 30px; 
+                                background-color: #27ae60; 
+                                color: white; 
+                                border: none; 
+                                border-radius: 5px; 
+                                cursor: pointer; 
+                                font-size: 12px; 
+                                margin-bottom: 3px;
+                                display: none;
+                            ">▶️ 再開</button>
+                        </div>
                     </div>
                 </div>
                 <!-- Ver.1.3で変更: スコア表示位置を盤面コンテナに合わせて調整 -->
@@ -185,6 +214,20 @@
             <img src="img/puyo_4.png" id="puyo_4">
             <img src="img/puyo_5.png" id="puyo_5">
             <img src="img/batankyu.png" id="batankyu">
+            <!-- Ver.1.8で追加: ばたんきゅー時のコンティニューテキスト -->
+            <div id="continue-text" style="
+                position: absolute;
+                display: none;
+                color: white;
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+                background-color: rgba(0,0,0,0.8);
+                padding: 10px 20px;
+                border-radius: 10px;
+                border: 2px solid white;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            ">コンティニュー &lt;SPACE KEY&gt;</div>
             <img src="img/zenkeshi.png" id="zenkeshi">
             <img src="img/font0.png" id="font0">
             <img src="img/font1.png" id="font1">

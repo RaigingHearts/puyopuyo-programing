@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>カスタム盤面編集 - ぷよぷよ Ver.1.7</title>
+    <title>カスタム盤面編集 - ぷよぷよ Ver.1.8</title>
     <style>
         body {
             margin: 0;
@@ -184,7 +184,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎮 カスタム盤面エディター Ver.1.7</h1>
+            <h1>🎮 カスタム盤面エディター Ver.1.8</h1>
             <p>ぷよを配置して自由に盤面を作成できます</p>
         </div>
         
@@ -209,6 +209,7 @@
                     <button class="tool-button clear" onclick="CustomEditor.clearField()">🗑️ 盤面クリア</button>
                     <button class="tool-button save" onclick="CustomEditor.saveField()">💾 盤面保存</button>
                     <button class="tool-button load" onclick="CustomEditor.loadField()">📂 盤面読み込み</button>
+                    <button class="tool-button load" onclick="CustomEditor.importExternalField()">🌐 外部コード読み込み</button>
                     <button class="tool-button apply" onclick="CustomEditor.applyToMain()">✅ メイン盤面に適用</button>
                     <button class="tool-button preview" onclick="CustomEditor.previewChain()">🔍 連鎖プレビュー</button>
                 </div>
@@ -222,6 +223,7 @@
                     <button class="tool-button load" onclick="CustomEditor.loadPreset('big_chain_1')">5連鎖</button>
                     <button class="tool-button load" onclick="CustomEditor.loadPreset('big_chain_2')">7連鎖</button>
                     <button class="tool-button load" onclick="CustomEditor.loadPreset('big_chain_3')">10連鎖</button>
+                    <button class="tool-button load" onclick="CustomEditor.loadPreset('test_17chain')" style="background-color: #e74c3c;">17連鎖テスト</button>
                 </div>
             </div>
             
@@ -416,13 +418,175 @@
                     return;
                 }
                 
-                let options = Object.keys(savedFields).map(name => `${name} (${new Date(savedFields[name].date).toLocaleDateString()})`);
-                let choice = prompt('読み込む盤面を選択してください:\n' + options.join('\n') + '\n\n名前を入力:');
+                this.showLoadFieldModal(savedFields);
+            }
+            
+            // 盤面読み込みモーダルを表示
+            static showLoadFieldModal(savedFields) {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.7);
+                    z-index: 1000;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                `;
                 
-                if (choice && savedFields[choice.split(' (')[0]]) {
-                    const fieldName = choice.split(' (')[0];
-                    this.loadFieldFromCode(savedFields[fieldName].code);
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    background-color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    max-width: 500px;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                `;
+                
+                let content = '<h3 style="margin-top: 0;">保存済み盤面の読み込み</h3>';
+                content += '<div style="margin-bottom: 15px;">';
+                
+                Object.entries(savedFields).forEach(([name, data]) => {
+                    const date = new Date(data.date).toLocaleDateString();
+                    content += `
+                        <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; cursor: pointer;" 
+                             onclick="CustomEditor.loadSelectedField('${name}'); document.body.removeChild(this.closest('.load-modal'));">
+                            <strong>${name}</strong><br>
+                            <small>保存日: ${date}</small>
+                        </div>
+                    `;
+                });
+                
+                content += '</div>';
+                content += `
+                    <button onclick="document.body.removeChild(this.closest('.load-modal'))" style="
+                        padding: 8px 16px;
+                        background-color: #e74c3c;
+                        color: white;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    ">閉じる</button>
+                `;
+                
+                modalContent.innerHTML = content;
+                modal.className = 'load-modal';
+                modal.appendChild(modalContent);
+                
+                // 背景クリックで閉じる
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+                
+                document.body.appendChild(modal);
+            }
+            
+            // 選択された盤面を読み込み
+            static loadSelectedField(name) {
+                const savedFields = JSON.parse(localStorage.getItem('puyoSavedFields') || '{}');
+                if (savedFields[name]) {
+                    this.loadFieldFromCode(savedFields[name].code);
                     alert('盤面を読み込みました');
+                } else {
+                    alert('盤面データが見つかりません');
+                }
+            }
+            
+            // 外部フィールドコード読み込み
+            static importExternalField() {
+                this.showImportFieldModal();
+            }
+            
+            // 外部フィールドコード読み込みモーダルを表示
+            static showImportFieldModal() {
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0.7);
+                    z-index: 1000;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                `;
+                
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    background-color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    max-width: 500px;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                `;
+                
+                modalContent.innerHTML = `
+                    <h3 style="margin-top: 0;">外部フィールドコード読み込み</h3>
+                    <div style="margin-bottom: 15px;">
+                        <label for="external-field-code">フィールドコードを入力してください:</label><br>
+                        <textarea id="external-field-code" style="
+                            width: 100%; 
+                            height: 100px; 
+                            margin-top: 5px; 
+                            padding: 5px; 
+                            border: 1px solid #ccc; 
+                            border-radius: 3px;
+                            font-family: monospace;
+                        " placeholder="72文字のフィールドコードを入力..."></textarea>
+                    </div>
+                    <div style="text-align: center;">
+                        <button onclick="CustomEditor.loadExternalFieldCode()" style="
+                            padding: 8px 16px;
+                            background-color: #27ae60;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            margin-right: 10px;
+                        ">読み込み</button>
+                        <button onclick="document.body.removeChild(this.closest('.import-modal'))" style="
+                            padding: 8px 16px;
+                            background-color: #e74c3c;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                        ">閉じる</button>
+                    </div>
+                `;
+                
+                modal.className = 'import-modal';
+                modal.appendChild(modalContent);
+                
+                // 背景クリックで閉じる
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+                
+                document.body.appendChild(modal);
+            }
+            
+            // 外部フィールドコードを読み込み
+            static loadExternalFieldCode() {
+                const code = document.getElementById('external-field-code').value.trim();
+                if (code) {
+                    if (this.loadFieldFromCode(code)) {
+                        alert('外部フィールドコードを読み込みました');
+                        document.body.removeChild(document.querySelector('.import-modal'));
+                    }
+                } else {
+                    alert('フィールドコードを入力してください');
                 }
             }
             
@@ -612,7 +776,8 @@
                     'chain_seed_3': '000000000000000000000000000000001100001200001200001300001300001400001400',
                     'big_chain_1': '000000000000000000000000112300112300112300445500445500445500445500445500',
                     'big_chain_2': '000000000000112300112300112300445500445500445500112300112300445500445500',
-                    'big_chain_3': '112300112300112300112300445500445500445500445500112300445500112300445500'
+                    'big_chain_3': '112300112300112300112300445500445500445500445500112300445500112300445500',
+                    'test_17chain': '034350034353234354103435245124245124451234245123234513123451123451123451'  // Ver.1.8で追加: 17連鎖テスト用
                 };
                 
                 if (presets[presetType]) {

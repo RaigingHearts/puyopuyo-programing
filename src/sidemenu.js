@@ -134,7 +134,66 @@ class SideMenu {
       }
     }
     
+    // Ver.1.8で追加: ゲームループを初期化
+    this.initializeGameLoop();
+    
     return true;
+  }
+  
+  // Ver.1.8で追加: ゲームループ初期化
+  static initializeGameLoop() {
+    // グローバル変数を初期化
+    if (typeof mode !== 'undefined') {
+      mode = 'start';
+    }
+    if (typeof combinationCount !== 'undefined') {
+      combinationCount = 0;
+    }
+    if (typeof frame !== 'undefined') {
+      frame = 0;
+    }
+    
+    // プレイヤーの状態をクリア（操作中のぷよがあれば削除）
+    if (Player.centerPuyoElement) {
+      Stage.stageElement.removeChild(Player.centerPuyoElement);
+      Player.centerPuyoElement = null;
+    }
+    if (Player.movablePuyoElement) {
+      Stage.stageElement.removeChild(Player.movablePuyoElement);
+      Player.movablePuyoElement = null;
+    }
+    if (Player.ghostCenterPuyoElement) {
+      Stage.stageElement.removeChild(Player.ghostCenterPuyoElement);
+      Player.ghostCenterPuyoElement = null;
+    }
+    if (Player.ghostMovablePuyoElement) {
+      Stage.stageElement.removeChild(Player.ghostMovablePuyoElement);
+      Player.ghostMovablePuyoElement = null;
+    }
+    
+    // 全消し表示を非表示
+    if (Stage.zenkeshiImage) {
+      Stage.zenkeshiImage.style.display = 'none';
+    }
+    
+    // ばたんきゅー画像も非表示
+    if (PuyoImage.batankyuImage) {
+      if (PuyoImage.batankyuImage.parentNode) {
+        PuyoImage.batankyuImage.parentNode.removeChild(PuyoImage.batankyuImage);
+      }
+    }
+    
+    // コンティニューテキストも非表示
+    const continueText = document.getElementById('continue-text');
+    if (continueText) {
+      continueText.style.display = 'none';
+    }
+    
+    // 落下コントロールの状態をリセット
+    if (Player.fallControlStatus) {
+      Player.fallControlStatus = false;
+      Player.updateFallControlButton();
+    }
   }
   
   // 現在の盤面をクリア
@@ -272,6 +331,7 @@ class SideMenu {
         <button onclick="SideMenu.loadPreset('big_chain_1')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">5連鎖</button>
         <button onclick="SideMenu.loadPreset('big_chain_2')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">7連鎖</button>
         <button onclick="SideMenu.loadPreset('big_chain_3')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">10連鎖</button>
+        <button onclick="SideMenu.loadPreset('test_17chain')" style="margin: 5px; padding: 8px; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">17連鎖テスト</button>
       </div>
     `;
   }
@@ -364,7 +424,8 @@ class SideMenu {
       'chain_seed_3': '000000000000000000000000000000001100001200001200001300001300001400001400',
       'big_chain_1': '000000000000000000000000112300112300112300445500445500445500445500445500',
       'big_chain_2': '000000000000112300112300112300445500445500445500112300112300445500445500',
-      'big_chain_3': '112300112300112300112300445500445500445500445500112300445500112300445500'
+      'big_chain_3': '112300112300112300112300445500445500445500445500112300445500112300445500',
+      'test_17chain': '034350034353234354103435245124245124451234245123234513123451123451123451'  // Ver.1.8で追加: 17連鎖テスト用
     };
     
     if (presets[presetType]) {

@@ -20,8 +20,11 @@ class Player {
       up: false,
       down: false,
       a: false,  // Ver.1.2で追加: 左回り回転
-      d: false   // Ver.1.2で追加: 右回り回転
+      d: false,  // Ver.1.2で追加: 右回り回転
+      space: false  // Ver.1.8で追加: スペースキー（ばたんきゅー後のリロード用）
     };
+    // Ver.1.8で追加: 落下コントロールボタンの状態管理
+    this.fallControlStatus = false;
     // ブラウザのキーボードの入力を取得するイベントリスナを登録する
     document.addEventListener('keydown', (e) => {
       // キーボードが押された場合
@@ -48,6 +51,10 @@ class Player {
           return false;
         case 68: // Ver.1.2で追加: Dキー（右回り回転）
           this.keyStatus.d = true;
+          e.preventDefault();
+          return false;
+        case 32: // Ver.1.8で追加: スペースキー（ばたんきゅー後のリロード用）
+          this.keyStatus.space = true;
           e.preventDefault();
           return false;
       }
@@ -77,6 +84,10 @@ class Player {
           return false;
         case 68: // Ver.1.2で追加: Dキー（右回り回転）
           this.keyStatus.d = false;
+          e.preventDefault();
+          return false;
+        case 32: // Ver.1.8で追加: スペースキー（ばたんきゅー後のリロード用）
+          this.keyStatus.space = false;
           e.preventDefault();
           return false;
       }
@@ -120,6 +131,8 @@ class Player {
       // Ver.1.2で追加: AキーとDキーの状態もリセット
       this.keyStatus.a = false
       this.keyStatus.d = false
+      // Ver.1.8で追加: スペースキーの状態もリセット
+      this.keyStatus.space = false
     })
     // ジェスチャーを判定して、keyStatusプロパティを更新する関数
     const gesture = (xs, ys, xe, ye) => {
@@ -282,8 +295,9 @@ class Player {
   }
   static falling(isDownPressed, isStopPressed) {
     // Ver.1.2で変更: 上矢印キーが押されている間は落下を停止
-    if (isStopPressed) {
-      // 上矢印キーが押されている間は落下を停止する
+    // Ver.1.8で変更: 上矢印キーまたは落下コントロールボタンで落下を停止
+    if (isStopPressed || this.fallControlStatus) {
+      // 上矢印キーまたは落下コントロールボタンが押されている間は落下を停止する
       return;
     }
     
@@ -558,8 +572,40 @@ class Player {
     }
   }
   static batankyu() {
-    if (this.keyStatus.up) {
+    // Ver.1.8で変更: 上矢印キーからスペースキーに変更
+    if (this.keyStatus.space) {
       location.reload()
+    }
+  }
+  
+  // Ver.1.8で追加: 落下コントロールボタンの制御メソッド
+  static toggleFallControl() {
+    this.fallControlStatus = !this.fallControlStatus;
+    this.updateFallControlButton();
+  }
+  
+  static pauseFall() {
+    this.fallControlStatus = true;
+    this.updateFallControlButton();
+  }
+  
+  static resumeFall() {
+    this.fallControlStatus = false;
+    this.updateFallControlButton();
+  }
+  
+  static updateFallControlButton() {
+    const pauseBtn = document.getElementById('pause-fall-btn');
+    const resumeBtn = document.getElementById('resume-fall-btn');
+    
+    if (pauseBtn && resumeBtn) {
+      if (this.fallControlStatus) {
+        pauseBtn.style.display = 'none';
+        resumeBtn.style.display = 'inline-block';
+      } else {
+        pauseBtn.style.display = 'inline-block';
+        resumeBtn.style.display = 'none';
+      }
     }
   }
 }
