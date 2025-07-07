@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>カスタム盤面編集 - ぷよぷよ Ver.1.6</title>
+    <title>カスタム盤面編集 - ぷよぷよ Ver.1.7</title>
     <style>
         body {
             margin: 0;
@@ -184,7 +184,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎮 カスタム盤面エディター Ver.1.6</h1>
+            <h1>🎮 カスタム盤面エディター Ver.1.7</h1>
             <p>ぷよを配置して自由に盤面を作成できます</p>
         </div>
         
@@ -438,7 +438,171 @@
             }
             
             static previewChain() {
-                alert('連鎖プレビュー機能（実装予定）');
+                const chainResult = this.simulateChain();
+                
+                if (chainResult.steps.length === 0) {
+                    alert('この盤面では連鎖が発生しません。');
+                    return;
+                }
+                
+                // 連鎖結果を表示
+                this.showChainResult(chainResult);
+            }
+            
+            // 連鎖をシミュレーション
+            static simulateChain() {
+                // 現在の盤面をコピー
+                const previewBoard = [];
+                for (let y = 0; y < STAGE_ROWS; y++) {
+                    previewBoard[y] = [...this.board[y]];
+                }
+                
+                const chainSteps = [];
+                let chainCount = 0;
+                let totalScore = 0;
+                
+                while (true) {
+                    // 落下処理
+                    this.simulateFall(previewBoard);
+                    
+                    // 消去判定
+                    const eraseResult = this.simulateErase(previewBoard);
+                    if (!eraseResult) {
+                        break; // 消去できない場合は連鎖終了
+                    }
+                    
+                    chainCount++;
+                    const chainScore = this.calculateChainScore(eraseResult, chainCount);
+                    totalScore += chainScore;
+                    
+                    // 連鎖ステップを保存
+                    chainSteps.push({
+                        step: chainCount,
+                        erasedCount: eraseResult.erasedPuyos.length,
+                        colorCount: eraseResult.colorCount,
+                        chainScore: chainScore,
+                        totalScore: totalScore
+                    });
+                    
+                    // 無限ループ防止
+                    if (chainCount > 20) {
+                        break;
+                    }
+                }
+                
+                return {
+                    steps: chainSteps,
+                    totalChains: chainCount,
+                    finalScore: totalScore
+                };
+            }
+            
+            // 落下シミュレーション
+            static simulateFall(board) {
+                let hasChanges = true;
+                while (hasChanges) {
+                    hasChanges = false;
+                    for (let y = STAGE_ROWS - 2; y >= 0; y--) {
+                        for (let x = 0; x < STAGE_COLS; x++) {
+                            if (board[y][x] !== 0 && board[y + 1][x] === 0) {
+                                board[y + 1][x] = board[y][x];
+                                board[y][x] = 0;
+                                hasChanges = true;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 消去シミュレーション
+            static simulateErase(board) {
+                const toErase = [];
+                const visited = [];
+                
+                // 初期化
+                for (let y = 0; y < STAGE_ROWS; y++) {
+                    visited[y] = [];
+                    for (let x = 0; x < STAGE_COLS; x++) {
+                        visited[y][x] = false;
+                    }
+                }
+                
+                // 連続するぷよを探す
+                for (let y = 0; y < STAGE_ROWS; y++) {
+                    for (let x = 0; x < STAGE_COLS; x++) {
+                        if (!visited[y][x] && board[y][x] >= 1 && board[y][x] <= 5) {
+                            const connected = this.findConnectedPuyos(x, y, board[y][x], visited, board);
+                            if (connected.length >= 4) { // ぷよぷよは4個以上で消去
+                                toErase.push(...connected);
+                            }
+                        }
+                    }
+                }
+                
+                if (toErase.length === 0) {
+                    return null;
+                }
+                
+                // 消去実行
+                const colorCount = {};
+                for (const pos of toErase) {
+                    const color = board[pos.y][pos.x];
+                    colorCount[color] = (colorCount[color] || 0) + 1;
+                    board[pos.y][pos.x] = 0;
+                }
+                
+                return {
+                    erasedPuyos: toErase,
+                    pieceCount: toErase.length,
+                    colorCount: Object.keys(colorCount).length
+                };
+            }
+            
+            // 連続するぷよを探す
+            static findConnectedPuyos(startX, startY, targetColor, visited, board) {
+                const connected = [];
+                const stack = [{x: startX, y: startY}];
+                
+                while (stack.length > 0) {
+                    const {x, y} = stack.pop();
+                    
+                    if (x < 0 || x >= STAGE_COLS || y < 0 || y >= STAGE_ROWS) continue;
+                    if (visited[y][x]) continue;
+                    if (board[y][x] !== targetColor) continue;
+                    
+                    visited[y][x] = true;
+                    connected.push({x, y});
+                    
+                    // 4方向に探索
+                    stack.push({x: x + 1, y: y});
+                    stack.push({x: x - 1, y: y});
+                    stack.push({x: x, y: y + 1});
+                    stack.push({x: x, y: y - 1});
+                }
+                
+                return connected;
+            }
+            
+            // 連鎖スコアを計算
+            static calculateChainScore(eraseResult, chainCount) {
+                const baseScore = eraseResult.pieceCount * 10;
+                const chainBonus = Math.pow(2, chainCount - 1);
+                const colorBonus = eraseResult.colorCount * 3;
+                return Math.floor(baseScore * chainBonus + colorBonus);
+            }
+            
+            // 連鎖結果を表示
+            static showChainResult(result) {
+                let message = `🎉 連鎖プレビュー結果 🎉\n\n`;
+                message += `総連鎖数: ${result.totalChains}連鎖\n`;
+                message += `最終スコア: ${result.finalScore}点\n\n`;
+                message += `--- 連鎖詳細 ---\n`;
+                
+                result.steps.forEach((step, index) => {
+                    message += `${step.step}連鎖目: ${step.erasedCount}個消去 (${step.chainScore}点)\n`;
+                });
+                
+                alert(message);
             }
             
             static loadPreset(presetType) {

@@ -5,6 +5,7 @@ class ChainPreview {
   static chainSteps = [];
   static currentStep = 0;
   static isPreviewMode = false;
+  static autoPlayInterval = null;
   
   // 連鎖プレビューを開始
   static startPreview() {
@@ -35,6 +36,11 @@ class ChainPreview {
   // 連鎖プレビューを停止
   static stopPreview() {
     this.isPreviewMode = false;
+    // 自動再生も停止
+    if (this.autoPlayInterval) {
+      clearInterval(this.autoPlayInterval);
+      this.autoPlayInterval = null;
+    }
     this.clearPreviewElements();
     this.removePreviewUI();
   }
@@ -290,8 +296,32 @@ class ChainPreview {
   
   // 自動再生の切り替え
   static toggleAutoPlay() {
-    // TODO: 自動再生機能の実装
-    alert('自動再生機能は実装予定です');
+    if (this.autoPlayInterval) {
+      // 自動再生停止
+      clearInterval(this.autoPlayInterval);
+      this.autoPlayInterval = null;
+      const btn = document.getElementById('auto-play-btn');
+      if (btn) {
+        btn.textContent = '自動再生';
+        btn.style.backgroundColor = '#28a745';
+      }
+    } else {
+      // 自動再生開始
+      this.autoPlayInterval = setInterval(() => {
+        if (this.currentStep < this.chainSteps.length - 1) {
+          this.showNextStep();
+        } else {
+          // 最後まで行ったら最初に戻る
+          this.showStep(0);
+        }
+      }, 1500); // 1.5秒間隔
+      
+      const btn = document.getElementById('auto-play-btn');
+      if (btn) {
+        btn.textContent = '停止';
+        btn.style.backgroundColor = '#dc3545';
+      }
+    }
   }
   
   // プレビュー表示の更新
