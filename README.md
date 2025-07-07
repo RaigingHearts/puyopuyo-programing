@@ -208,4 +208,12 @@ Config.fontHeight = 33; // スコア表示エリアの高さ
       - src/sidemenu.js: ゲームループ初期化機能
       - custom.html: 操作性向上とUI改善
       - index.html: 落下コントロールボタンの追加
+* Ver.1.9
+    * 追加の細部修正作業
+    * ばたんきゅー案内テキストを改行表示へ変更 ("コンティニュー" 改行 "<SPACE KEY>")
+    * カスタム盤面読み込み時: ループ初期化 → 盤面反映 → 操作停止 状態で制御
+    * メイン盤面の連鎖プレビューを動的描画に対応、プレビュー中はゲームループ停止
+    * ファイル間での制御フローを整理 (SideMenu / ChainPreview / Player)
+    * バージョン表記を Ver.1.9 に更新
+    * 修正ファイル：index.html, src/puyoimage.js, src/player.js, src/sidemenu.js, src/chain.js, custom.html
 * ＜以下、改修された履歴を追記する＞
