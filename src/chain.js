@@ -58,6 +58,11 @@ class ChainPreview {
     if (this.previewType === 'main') {
       this.restoreOriginalBoard();
       this.removeMainPreviewUI();
+      
+      // Ver.1.9で追加: カスタム盤面モードの場合はコントロールパネルに戻る
+      if (typeof Player !== 'undefined' && Player.isCustomFieldMode) {
+        SideMenu.showCustomFieldControls();
+      }
     } else {
       this.clearPreviewElements();
       this.removePreviewUI();
@@ -563,11 +568,11 @@ class ChainPreview {
 
 // SideMenuクラスの連鎖プレビューとステップ連鎖機能を更新
 SideMenu.startChainPreview = function() {
-  // Ver.1.9で変更: メイン盤面での動的プレビューを使用
-  ChainPreview.startPreview('main');
+  // Ver.1.9で変更: 通常プレイ時はモーダルプレビューを使用
+  ChainPreview.startPreview('modal');
 };
 
 SideMenu.startStepChain = function() {
-  // Ver.1.9で変更: メイン盤面での動的プレビューを使用
-  ChainPreview.startPreview('main');
+  // Ver.1.9で変更: 通常プレイ時はモーダルプレビューを使用
+  ChainPreview.startPreview('modal');
 };

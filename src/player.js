@@ -25,6 +25,9 @@ class Player {
     };
     // Ver.1.8で追加: 落下コントロールボタンの状態管理
     this.fallControlStatus = false;
+    // Ver.1.9で追加: カスタム盤面モードの状態管理
+    this.isCustomFieldMode = false;
+    this.isGameActive = true;
     // ブラウザのキーボードの入力を取得するイベントリスナを登録する
     document.addEventListener('keydown', (e) => {
       // キーボードが押された場合
@@ -357,6 +360,11 @@ class Player {
     }
   }
   static playing(frame) {
+    // Ver.1.9で追加: カスタム盤面モードまたはゲーム非アクティブ時は操作を無効化
+    if (this.isCustomFieldMode || !this.isGameActive) {
+      return 'playing'; // 操作を受け付けずに現在の状態を維持
+    }
+    
     // Ver.1.2で変更: 自由落下を確認する（上矢印キーでストップ機能追加）
     // 下キーが押されていた場合、それ込みで自由落下させる
     // 上矢印キーが押されている場合は落下を停止する

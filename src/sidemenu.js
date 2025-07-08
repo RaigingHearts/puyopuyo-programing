@@ -112,37 +112,177 @@ class SideMenu {
     return code;
   }
   
-  // フィールドコードから盤面を復元
+  // Ver.1.9で完全改修: フィールドコードから盤面を復元
   static loadFieldFromCode(code) {
     if (code.length !== Config.stageRows * Config.stageCols) {
       alert('フィールドコードの形式が正しくありません');
       return false;
     }
     
-    // Ver.1.9で変更: ループ処理初期化を最初に実行
-    this.initializeGameLoop();
+    // 1. カスタム盤面データの読み込み（メモリ保存）
+    this.customFieldData = {
+      code: code,
+      boardData: []
+    };
     
-    // 現在の盤面をクリア
-    this.clearCurrentField();
-    
-    // フィールドコードから盤面を復元
+    // フィールドコードを盤面データに変換
     for (let y = 0; y < Config.stageRows; y++) {
+      this.customFieldData.boardData[y] = [];
       for (let x = 0; x < Config.stageCols; x++) {
         const index = y * Config.stageCols + x;
         const puyoType = parseInt(code[index]);
+        this.customFieldData.boardData[y][x] = (puyoType >= 1 && puyoType <= 5) ? puyoType : 0;
+      }
+    }
+    
+    // 2. ループ初期化
+    this.initializeGameLoop();
+    
+    // 3. すべてのロジック処理を完全停止して待機
+    this.enterCustomFieldMode();
+    
+    // 4. メイン盤面にカスタム盤面を反映
+    this.applyCustomFieldToMain();
+    
+    return true;
+  }
+  
+  // Ver.1.9で追加: カスタム盤面モードに入る（完全停止状態）
+  static enterCustomFieldMode() {
+    // プレイヤー制御を完全停止
+    if (typeof Player !== 'undefined') {
+      Player.isCustomFieldMode = true;
+      Player.isGameActive = false;
+      if (Player.pauseFall) {
+        Player.pauseFall();
+      }
+    }
+    
+    // カスタム盤面用のコントロールボタンを表示
+    this.showCustomFieldControls();
+  }
+  
+  // Ver.1.9で追加: カスタム盤面をメイン盤面に適用
+  static applyCustomFieldToMain() {
+    // 現在の盤面をクリア
+    this.clearCurrentField();
+    
+    // カスタム盤面データを適用
+    for (let y = 0; y < Config.stageRows; y++) {
+      for (let x = 0; x < Config.stageCols; x++) {
+        const puyoType = this.customFieldData.boardData[y][x];
         if (puyoType >= 1 && puyoType <= 5) {
           Stage.setPuyo(x, y, puyoType);
           Stage.puyoCount++;
         }
       }
     }
-    
-    // Ver.1.9で追加: カスタムデータ読み込み後に操作停止状態にする
-    if (typeof Player !== 'undefined' && Player.pauseFall) {
-      Player.pauseFall();
+  }
+  
+  // Ver.1.9で追加: カスタム盤面用コントロール表示
+  static showCustomFieldControls() {
+    // 既存のボタンがある場合は削除
+    const existingControls = document.getElementById('custom-field-controls');
+    if (existingControls) {
+      existingControls.remove();
     }
     
-    return true;
+    // カスタム盤面専用コントロールパネルを作成
+    const controlPanel = document.createElement('div');
+    controlPanel.id = 'custom-field-controls';
+    controlPanel.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255,255,255,0.95);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      z-index: 1000;
+      text-align: center;
+      border: 3px solid #2c3e50;
+    `;
+    
+    controlPanel.innerHTML = `
+      <h3 style="margin-top: 0; color: #2c3e50;">カスタム盤面読み込み完了</h3>
+      <p style="color: #34495e; margin-bottom: 20px;">操作を選択してください</p>
+      <div style="margin-bottom: 15px;">
+        <button onclick="SideMenu.startCustomChainPreview()" style="
+          width: 200px; 
+          padding: 12px; 
+          margin: 5px; 
+          background-color: #1abc9c; 
+          color: white; 
+          border: none; 
+          border-radius: 5px; 
+          cursor: pointer;
+          font-size: 14px;
+        ">🔍 連鎖プレビュー</button>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <button onclick="SideMenu.startCustomStepChain()" style="
+          width: 200px; 
+          padding: 12px; 
+          margin: 5px; 
+          background-color: #16a085; 
+          color: white; 
+          border: none; 
+          border-radius: 5px; 
+          cursor: pointer;
+          font-size: 14px;
+        ">📊 ステップ連鎖</button>
+      </div>
+      <div>
+        <button onclick="SideMenu.resumeNormalPlay()" style="
+          width: 200px; 
+          padding: 12px; 
+          margin: 5px; 
+          background-color: #27ae60; 
+          color: white; 
+          border: none; 
+          border-radius: 5px; 
+          cursor: pointer;
+          font-size: 14px;
+        ">▶️ 通常プレイ開始</button>
+      </div>
+    `;
+    
+    document.body.appendChild(controlPanel);
+  }
+  
+  // Ver.1.9で追加: カスタム盤面用連鎖プレビュー開始
+  static startCustomChainPreview() {
+    this.hideCustomFieldControls();
+    ChainPreview.startPreview('main');
+  }
+  
+  // Ver.1.9で追加: カスタム盤面用ステップ連鎖開始
+  static startCustomStepChain() {
+    this.hideCustomFieldControls();
+    ChainPreview.startPreview('main');
+  }
+  
+  // Ver.1.9で追加: 通常プレイ再開
+  static resumeNormalPlay() {
+    this.hideCustomFieldControls();
+    
+    // プレイヤー制御を再開
+    if (typeof Player !== 'undefined') {
+      Player.isCustomFieldMode = false;
+      Player.isGameActive = true;
+      if (Player.resumeFall) {
+        Player.resumeFall();
+      }
+    }
+  }
+  
+  // Ver.1.9で追加: カスタム盤面コントロールを非表示
+  static hideCustomFieldControls() {
+    const controls = document.getElementById('custom-field-controls');
+    if (controls) {
+      controls.remove();
+    }
   }
   
   // Ver.1.8で追加: ゲームループ初期化
