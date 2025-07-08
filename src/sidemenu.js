@@ -138,7 +138,10 @@ class SideMenu {
     // 2. ループ初期化
     this.initializeGameLoop();
     
-    // 3. すべてのロジック処理を完全停止して待機
+    // 3. すべてのロジック処理を完全停止して待機（checkFall実行前に停止）
+    if (typeof stopGameLoop !== 'undefined') {
+      stopGameLoop(); // Game.jsのメインループを完全停止
+    }
     this.enterCustomFieldMode();
     
     // 4. メイン盤面にカスタム盤面を反映
@@ -267,6 +270,11 @@ class SideMenu {
   static resumeNormalPlay() {
     this.hideCustomFieldControls();
     
+    // Game.jsのメインループを再開
+    if (typeof resumeGameLoop !== 'undefined') {
+      resumeGameLoop();
+    }
+    
     // プレイヤー制御を再開
     if (typeof Player !== 'undefined') {
       Player.isCustomFieldMode = false;
@@ -287,8 +295,15 @@ class SideMenu {
   
   // Ver.1.8で追加: ゲームループ初期化
   static initializeGameLoop() {
+    // Ver.1.9で追加: Game.jsループの状態をリセット
+    if (typeof resumeGameLoop !== 'undefined') {
+      resumeGameLoop(); // まず停止状態を解除
+    }
+    
     // グローバル変数を初期化
-    if (typeof mode !== 'undefined') {
+    if (typeof setGameMode !== 'undefined') {
+      setGameMode('start');
+    } else if (typeof mode !== 'undefined') {
       mode = 'start';
     }
     if (typeof combinationCount !== 'undefined') {

@@ -22,9 +22,13 @@ class ChainPreview {
     this.copyBoardToPreview();
     this.chainSteps = [];
     
-    // Ver.1.9で追加: メイン盤面プレビューの場合は元の盤面を保存
+    // Ver.1.9で追加: メイン盤面プレビューの場合は元の盤面を保存とループ停止
     if (this.previewType === 'main') {
       this.saveOriginalBoard();
+      // Game.jsのメインループを停止（プレビュー中の自動連鎖を防ぐ）
+      if (typeof stopGameLoop !== 'undefined') {
+        stopGameLoop();
+      }
     }
     
     // 連鎖をシミュレーション
@@ -61,7 +65,13 @@ class ChainPreview {
       
       // Ver.1.9で追加: カスタム盤面モードの場合はコントロールパネルに戻る
       if (typeof Player !== 'undefined' && Player.isCustomFieldMode) {
+        // カスタム盤面モードの場合はGame.jsループは停止したまま
         SideMenu.showCustomFieldControls();
+      } else {
+        // 通常プレイの場合はGame.jsループを再開
+        if (typeof resumeGameLoop !== 'undefined') {
+          resumeGameLoop();
+        }
       }
     } else {
       this.clearPreviewElements();

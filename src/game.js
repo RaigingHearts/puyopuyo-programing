@@ -8,6 +8,7 @@ window.addEventListener("load", () => {
 let mode; // ゲームの現在の状況
 let frame; // ゲームの現在フレーム（1/60秒ごとに1追加される）
 let combinationCount = 0; // 何連鎖かどうか
+let isGameLoopStopped = false; // Ver.1.9で追加: ゲームループの完全停止フラグ
 function initialize() {
   // 画像を準備する
   PuyoImage.initialize();
@@ -26,6 +27,13 @@ function initialize() {
 }
 
 function loop() {
+  // Ver.1.9で追加: ゲームループの完全停止チェック
+  if (isGameLoopStopped) {
+    frame++;
+    requestAnimationFrame(loop);
+    return;
+  }
+  
   switch (mode) {
     case 'start':
       // 最初は、もしかしたら空中にあるかもしれないぷよを自由落下させるところからスタート
@@ -116,4 +124,26 @@ function loop() {
   }
   frame++;
   requestAnimationFrame(loop); // 1/60秒後にもう一度呼び出す
+}
+
+// Ver.1.9で追加: ゲームループ制御関数
+function stopGameLoop() {
+  isGameLoopStopped = true;
+}
+
+function resumeGameLoop() {
+  isGameLoopStopped = false;
+}
+
+function isGameLoopActive() {
+  return !isGameLoopStopped;
+}
+
+// Ver.1.9で追加: モード変更機能（カスタム盤面用）
+function setGameMode(newMode) {
+  mode = newMode;
+}
+
+function getGameMode() {
+  return mode;
 }
