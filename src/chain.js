@@ -6,18 +6,26 @@ class ChainPreview {
   static currentStep = 0;
   static isPreviewMode = false;
   static autoPlayInterval = null;
+  static previewType = 'modal'; // Ver.1.9で追加: 'modal' または 'main'
+  static originalBoard = []; // Ver.1.9で追加: 元の盤面状態を保存
   
   // 連鎖プレビューを開始
-  static startPreview() {
+  static startPreview(type = 'modal') {
     if (this.isPreviewMode) {
       this.stopPreview();
       return;
     }
     
     this.isPreviewMode = true;
+    this.previewType = type; // Ver.1.9で追加
     this.currentStep = 0;
     this.copyBoardToPreview();
     this.chainSteps = [];
+    
+    // Ver.1.9で追加: メイン盤面プレビューの場合は元の盤面を保存
+    if (this.previewType === 'main') {
+      this.saveOriginalBoard();
+    }
     
     // 連鎖をシミュレーション
     this.simulateChain();
@@ -28,8 +36,12 @@ class ChainPreview {
       return;
     }
     
-    // プレビューUI作成
-    this.createPreviewUI();
+    // プレビューUI作成（タイプに応じて分岐）
+    if (this.previewType === 'main') {
+      this.createMainPreviewUI();
+    } else {
+      this.createPreviewUI();
+    }
     this.showStep(0);
   }
   
@@ -41,8 +53,15 @@ class ChainPreview {
       clearInterval(this.autoPlayInterval);
       this.autoPlayInterval = null;
     }
-    this.clearPreviewElements();
-    this.removePreviewUI();
+    
+    // Ver.1.9で追加: メイン盤面プレビューの場合は元の状態に復旧
+    if (this.previewType === 'main') {
+      this.restoreOriginalBoard();
+      this.removeMainPreviewUI();
+    } else {
+      this.clearPreviewElements();
+      this.removePreviewUI();
+    }
   }
   
   // 現在の盤面をプレビュー用にコピー
@@ -56,6 +75,50 @@ class ChainPreview {
           this.previewBoard[y][x] = cell.puyo;
         } else {
           this.previewBoard[y][x] = 0;
+        }
+      }
+    }
+  }
+  
+  // Ver.1.9で追加: 元の盤面状態を保存
+  static saveOriginalBoard() {
+    this.originalBoard = [];
+    for (let y = 0; y < Config.stageRows; y++) {
+      this.originalBoard[y] = [];
+      for (let x = 0; x < Config.stageCols; x++) {
+        const cell = Stage.board[y][x];
+        if (cell && cell.puyo) {
+          this.originalBoard[y][x] = cell.puyo;
+        } else {
+          this.originalBoard[y][x] = 0;
+        }
+      }
+    }
+  }
+  
+  // Ver.1.9で追加: 元の盤面状態に復旧
+  static restoreOriginalBoard() {
+    // 現在の盤面をクリア
+    for (let y = 0; y < Config.stageRows; y++) {
+      for (let x = 0; x < Config.stageCols; x++) {
+        const cell = Stage.board[y] && Stage.board[y][x];
+        if (cell && cell.element) {
+          Stage.stageElement.removeChild(cell.element);
+        }
+        if (Stage.board[y]) {
+          Stage.board[y][x] = null;
+        }
+      }
+    }
+    
+    // 元の状態に復旧
+    Stage.puyoCount = 0;
+    for (let y = 0; y < Config.stageRows; y++) {
+      for (let x = 0; x < Config.stageCols; x++) {
+        const puyoType = this.originalBoard[y][x];
+        if (puyoType >= 1 && puyoType <= 5) {
+          Stage.setPuyo(x, y, puyoType);
+          Stage.puyoCount++;
         }
       }
     }
@@ -259,25 +322,47 @@ class ChainPreview {
     this.currentStep = stepIndex;
     const step = this.chainSteps[stepIndex];
     
-    // 盤面の更新
-    this.updatePreviewDisplay(step.board, step.erasedPuyos);
-    
-    // ステップ情報の更新
-    const stepDisplay = document.getElementById('chain-step-display');
-    if (stepDisplay) {
-      stepDisplay.innerHTML = `
-        <strong>ステップ ${stepIndex + 1}:</strong> ${step.step}連鎖目<br>
-        <strong>消去ぷよ数:</strong> ${step.erasedPuyos.length}個<br>
-        <strong>このステップのスコア:</strong> ${step.chainScore}点<br>
-        <strong>累計スコア:</strong> ${step.score}点
-      `;
+    // Ver.1.9で変更: プレビュータイプに応じて表示処理を分岐
+    if (this.previewType === 'main') {
+      // メイン盤面での動的プレビュー
+      this.updateMainPreviewDisplay(step.board, step.erasedPuyos);
+      
+      // メイン盤面用ステップ情報の更新
+      const stepDisplay = document.getElementById('main-chain-step-display');
+      if (stepDisplay) {
+        stepDisplay.innerHTML = `
+          <strong>${stepIndex + 1}/${this.chainSteps.length}:</strong> ${step.step}連鎖目<br>
+          <strong>消去:</strong> ${step.erasedPuyos.length}個<br>
+          <strong>スコア:</strong> ${step.chainScore}点
+        `;
+      }
+      
+      // メイン盤面用ボタンの状態更新
+      const prevBtn = document.getElementById('main-prev-step-btn');
+      const nextBtn = document.getElementById('main-next-step-btn');
+      if (prevBtn) prevBtn.disabled = stepIndex === 0;
+      if (nextBtn) nextBtn.disabled = stepIndex === this.chainSteps.length - 1;
+    } else {
+      // モーダル盤面での静的プレビュー
+      this.updatePreviewDisplay(step.board, step.erasedPuyos);
+      
+      // ステップ情報の更新
+      const stepDisplay = document.getElementById('chain-step-display');
+      if (stepDisplay) {
+        stepDisplay.innerHTML = `
+          <strong>ステップ ${stepIndex + 1}:</strong> ${step.step}連鎖目<br>
+          <strong>消去ぷよ数:</strong> ${step.erasedPuyos.length}個<br>
+          <strong>このステップのスコア:</strong> ${step.chainScore}点<br>
+          <strong>累計スコア:</strong> ${step.score}点
+        `;
+      }
+      
+      // ボタンの状態更新
+      const prevBtn = document.getElementById('prev-step-btn');
+      const nextBtn = document.getElementById('next-step-btn');
+      if (prevBtn) prevBtn.disabled = stepIndex === 0;
+      if (nextBtn) nextBtn.disabled = stepIndex === this.chainSteps.length - 1;
     }
-    
-    // ボタンの状態更新
-    const prevBtn = document.getElementById('prev-step-btn');
-    const nextBtn = document.getElementById('next-step-btn');
-    if (prevBtn) prevBtn.disabled = stepIndex === 0;
-    if (nextBtn) nextBtn.disabled = stepIndex === this.chainSteps.length - 1;
   }
   
   // 前のステップを表示
@@ -300,9 +385,12 @@ class ChainPreview {
       // 自動再生停止
       clearInterval(this.autoPlayInterval);
       this.autoPlayInterval = null;
-      const btn = document.getElementById('auto-play-btn');
+      
+      // Ver.1.9で変更: プレビュータイプに応じてボタンを選択
+      const btnId = this.previewType === 'main' ? 'main-auto-play-btn' : 'auto-play-btn';
+      const btn = document.getElementById(btnId);
       if (btn) {
-        btn.textContent = '自動再生';
+        btn.textContent = this.previewType === 'main' ? '自動' : '自動再生';
         btn.style.backgroundColor = '#28a745';
       }
     } else {
@@ -316,7 +404,9 @@ class ChainPreview {
         }
       }, 1500); // 1.5秒間隔
       
-      const btn = document.getElementById('auto-play-btn');
+      // Ver.1.9で変更: プレビュータイプに応じてボタンを選択
+      const btnId = this.previewType === 'main' ? 'main-auto-play-btn' : 'auto-play-btn';
+      const btn = document.getElementById(btnId);
       if (btn) {
         btn.textContent = '停止';
         btn.style.backgroundColor = '#dc3545';
@@ -364,13 +454,120 @@ class ChainPreview {
     });
     this.previewElements = [];
   }
+  
+  // Ver.1.9で追加: メイン盤面用プレビューUIを作成
+  static createMainPreviewUI() {
+    const ui = document.createElement('div');
+    ui.id = 'main-chain-preview-ui';
+    ui.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.95);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 500;
+      min-width: 200px;
+      border: 2px solid #34495e;
+    `;
+    
+    ui.innerHTML = `
+      <h4 style="margin-top: 0; color: #2c3e50;">連鎖プレビュー</h4>
+      <div id="main-chain-info" style="margin-bottom: 10px; font-size: 12px; color: #2c3e50;">
+        <strong>連鎖数:</strong> ${this.chainSteps.length}連鎖<br>
+        <strong>合計スコア:</strong> ${this.chainSteps[this.chainSteps.length - 1]?.score || 0}点
+      </div>
+      <div id="main-chain-step-display" style="margin-bottom: 10px; font-size: 11px; color: #34495e; min-height: 30px;">
+        <!-- ステップ情報がここに表示される -->
+      </div>
+      <div style="text-align: center;">
+        <button id="main-prev-step-btn" style="margin: 2px; padding: 5px 8px; background: #6c757d; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">前</button>
+        <button id="main-next-step-btn" style="margin: 2px; padding: 5px 8px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">次</button>
+        <button id="main-auto-play-btn" style="margin: 2px; padding: 5px 8px; background: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">自動</button>
+      </div>
+      <div style="text-align: center; margin-top: 8px;">
+        <button onclick="ChainPreview.stopPreview()" style="padding: 5px 10px; background: #dc3545; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">終了</button>
+      </div>
+    `;
+    
+    document.body.appendChild(ui);
+    
+    // イベントリスナー設定
+    document.getElementById('main-prev-step-btn').addEventListener('click', () => this.showPrevStep());
+    document.getElementById('main-next-step-btn').addEventListener('click', () => this.showNextStep());
+    document.getElementById('main-auto-play-btn').addEventListener('click', () => this.toggleAutoPlay());
+  }
+  
+  // Ver.1.9で追加: メイン盤面用プレビューUIを削除
+  static removeMainPreviewUI() {
+    const ui = document.getElementById('main-chain-preview-ui');
+    if (ui) {
+      ui.remove();
+    }
+  }
+  
+  // Ver.1.9で追加: メイン盤面での動的プレビュー表示更新
+  static updateMainPreviewDisplay(board, erasedPuyos) {
+    // 現在の盤面をクリア
+    for (let y = 0; y < Config.stageRows; y++) {
+      for (let x = 0; x < Config.stageCols; x++) {
+        const cell = Stage.board[y] && Stage.board[y][x];
+        if (cell && cell.element) {
+          Stage.stageElement.removeChild(cell.element);
+        }
+        if (Stage.board[y]) {
+          Stage.board[y][x] = null;
+        }
+      }
+    }
+    
+    // 消去対象のぷよをハイライト用のセット作成
+    const erasedSet = new Set(erasedPuyos.map(p => `${p.x},${p.y}`));
+    
+    // プレビュー盤面の状態をメイン盤面に反映
+    Stage.puyoCount = 0;
+    for (let y = 0; y < Config.stageRows; y++) {
+      for (let x = 0; x < Config.stageCols; x++) {
+        const puyoType = board[y][x];
+        if (puyoType >= 1 && puyoType <= 5) {
+          Stage.setPuyo(x, y, puyoType);
+          Stage.puyoCount++;
+          
+          // 消去対象のぷよは特別な表示にする
+          const cell = Stage.board[y][x];
+          if (cell && cell.element && erasedSet.has(`${x},${y}`)) {
+            cell.element.style.filter = 'brightness(150%) saturate(150%)';
+            cell.element.style.boxShadow = '0 0 10px rgba(255,0,0,0.8)';
+            cell.element.style.animation = 'pulse 1s infinite';
+          }
+        }
+      }
+    }
+    
+    // アニメーション用CSSを動的に追加（まだ存在しない場合）
+    if (!document.getElementById('preview-animation-style')) {
+      const style = document.createElement('style');
+      style.id = 'preview-animation-style';
+      style.textContent = `
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
 }
 
 // SideMenuクラスの連鎖プレビューとステップ連鎖機能を更新
 SideMenu.startChainPreview = function() {
-  ChainPreview.startPreview();
+  // Ver.1.9で変更: メイン盤面での動的プレビューを使用
+  ChainPreview.startPreview('main');
 };
 
 SideMenu.startStepChain = function() {
-  ChainPreview.startPreview();
+  // Ver.1.9で変更: メイン盤面での動的プレビューを使用
+  ChainPreview.startPreview('main');
 };

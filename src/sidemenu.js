@@ -119,6 +119,9 @@ class SideMenu {
       return false;
     }
     
+    // Ver.1.9で変更: ループ処理初期化を最初に実行
+    this.initializeGameLoop();
+    
     // 現在の盤面をクリア
     this.clearCurrentField();
     
@@ -134,8 +137,10 @@ class SideMenu {
       }
     }
     
-    // Ver.1.8で追加: ゲームループを初期化
-    this.initializeGameLoop();
+    // Ver.1.9で追加: カスタムデータ読み込み後に操作停止状態にする
+    if (typeof Player !== 'undefined' && Player.pauseFall) {
+      Player.pauseFall();
+    }
     
     return true;
   }
