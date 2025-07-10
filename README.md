@@ -1,8 +1,7 @@
 # ぷよぷよプログラミング一式実装
 このリポジトリは、SEGAとMonaca Educationで協賛されているプログラミング学習教材を指示通りに実装したものです。
 ## 注意事項
-コード内容や画像リソースはSEGAによりライセンスが管理されているため、GithubではPublicにできません。  
-PrivateリポジトリではCursorなど、リポジトリを読みに行けるAIサービスを使えないかもしれないです。
+コード内容や画像リソースはSEGAによりライセンスが管理されています。  
 ## 資料一覧
 [公式ホームページ](https://puyo.sega.jp/program_2020/)
 [プログラムコードの全文教本](https://puyo.sega.jp/program_2020/dl/puyo-programming-code.pdf)
