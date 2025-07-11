@@ -24,6 +24,8 @@ function initialize() {
   mode = 'start';
   // フレームを初期化する
   frame = 0;
+  // 全消し演出をリセット
+  Stage.hideZenkeshi();
 }
 
 function loop() {
@@ -81,6 +83,8 @@ function loop() {
       }
       break;
     case 'newPuyo':
+      // 新しいぷよ生成時にも全消し演出をリセット
+      Stage.hideZenkeshi();
       if (!Player.createNewPuyo()) {
         // 新しい操作用ぷよを作成出来なかったら、ゲームオーバー
         mode = 'gameOver';
