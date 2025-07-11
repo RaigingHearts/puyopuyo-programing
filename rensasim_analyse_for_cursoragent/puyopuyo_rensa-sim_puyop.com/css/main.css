@@ -1,0 +1,783 @@
+@charset "utf-8";
+
+/* Override some defaults */
+html, body {
+  background-color: #eee;
+}
+body {
+  padding-top: 58px; /* 40px to make the container go all the way to the bottom of the topbar */
+  font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "ＭＳ Ｐゴシック", "MS PGothic", "メイリオ", Meiryo, Osaka, sans-serif;
+}
+.container > footer {
+  margin-top: 2px;
+  padding-top: 0;
+}
+.container > footer {
+  margin-bottom: 40px;
+}
+.container > footer p {
+  text-align: center; /* center align it with the container */
+}
+.container {
+  width: 940px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+}
+
+/* The white background content wrapper */
+.content {
+  background-color: #fff;
+  padding: 20px;
+  margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+  -webkit-border-radius: 0 0 6px 6px;
+     -moz-border-radius: 0 0 6px 6px;
+          border-radius: 0 0 6px 6px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+          box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+
+/* Page header tweaks */
+.page-header {
+  position: relative;
+  background-color: #f5f5f5;
+  padding: 10px 20px 0px;
+  margin: -20px -20px 10px;
+}
+h1 {
+  margin-top: 2px;
+  font-size: 20px;
+  line-height: 26px;
+}
+
+/* Give a quick and non-cross-browser friendly divider */
+.content .subContent {
+  margin-left: 0;
+  padding-left: 19px;
+  border-left: 1px solid #eee;
+}
+
+.topbar .btn {
+  border: 0;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+.redStrong {
+  color: #cc0000;
+  font-weight: bold;
+}
+
+
+
+#twitterButton {
+	position: absolute;
+	top: 13px;
+	left: 860px/*567px*/;
+	z-index: 1;
+}
+#hatebuButton {
+	position: absolute;
+	top: 13px;
+	left: 672px;
+}
+#facebookButton {
+	position: absolute;
+	top: 13px;
+	left: 736px;
+}
+#gplusoneButton {
+	position: absolute;
+	top: 13px;
+	left: 900px;
+}
+
+
+
+/* topbar */
+.topbar {
+  height: 58px;
+}
+.topbar .fill {
+  height: 60px;
+  background-color: #ffffff;
+  background-repeat: repeat-x;
+  background-image: url(../img/site/header_line.gif);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=0);
+  -webkit-box-shadow: 0 1px 7px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 7px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 7px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+.topbar .title {
+  float: left;
+  margin-left: -20px;
+}
+
+/* topbar - menu */
+.topbar div > ul {
+  margin: 12px 10px 0 0;
+}
+.topbar div > ul a {
+  padding: 1px 6px 3px;
+  margin-right: 1px;
+  color: #404040;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.topbar div > ul a:hover {
+  background-color: #eeeeee;
+  color: #404040;
+  text-shadow: none;
+}
+.topbar div > ul .active > a {
+  background-color: #39a1db;
+  color: #ffffff;
+  text-shadow: none;
+}
+
+/* topbar - button */
+.topbar .login {
+  margin-top: 15px;
+}
+.topbar .logout {
+  margin-top: 3px;
+  text-align: right;
+}
+.topbar .logout input,
+.topbar .logout input:hover,
+.topbar .logout input:focus,
+.topbar .logout input.focused {
+  padding: 3px;
+}
+.topbar input {
+  background-color: #bbbbbb;
+  background-color: rgba(192, 192, 192, 0.3);
+  color: #222222;
+  color: rgba(32, 32, 32, 0.75);
+}
+.topbar input:hover {
+  background-color: #dddddd;
+  background-color: rgba(224, 224, 224, 0.5);
+  color: #111111;
+  color: rgba(16, 16, 16, 0.75);
+}
+.topbar input:focus, .topbar input.focused {
+  padding: 4px 9px;
+  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #404040;
+  color: rgba(60, 60, 60, 0.75);
+  border: 1px solid #111;
+}
+
+
+
+/* label */
+label {
+  float: none;
+  width: none;
+  text-align: none;
+  color: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 100%;
+  line-height: 1;
+  font-family: inherit;
+}
+
+/* list */
+ul, ol {
+  list-style: none;
+  margin: 0;
+}
+
+/* table */
+table th, table td {
+  padding: 7px;
+}
+table td.title {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+/* label */
+.label {
+  padding: 5px 8px;
+  font-size: 12px;
+}
+
+/* wordBreak */
+.wordBreak {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+/* modal */
+.modal-header {
+  background-color: #f5f5f5;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 720px;
+  margin: 0 0 0 -360px;
+
+  -webkit-border-radius: 0 0 6px 6px;
+  -moz-border-radius: 0 0 6px 6px;
+  border-radius: 0 0 6px 6px;
+}
+
+/* top */
+.topMainImgWrapper {
+  position: relative;
+  height: 289px;
+}
+.topMainImg {
+  position: absolute;
+  top: -38px;
+}
+
+.topExplanation {
+  margin-top: 10px;
+  padding: 15px;
+  background-color: #eeeeee;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.topExplanationLine {
+  background-color: #f6f6f6;
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+.topExplanationTitle {
+  margin-bottom: 5px;
+  border-bottom: 1px dashed #bfbfbf;
+  padding-bottom: 5px;
+  font-size: 110%;
+  font-weight: bold;
+}
+
+/* toTop */
+.toTopDiv {
+  text-align: right;
+  margin-top: 20px;
+}
+
+
+
+/* userList */
+ul.userList {
+  border-top: 1px solid #bfbfbf;
+}
+ul.userList li {
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 10px 0 5px 0;
+}
+ul.userList .userImage {
+  float: left;
+  overflow: hidden;
+}
+ul.userList .userInfo {
+  margin-left: 71px;
+}
+ul.userList .userInfoLine {
+  margin-bottom: 5px;
+}
+ul.userList .userName {
+  font-weight: bold;
+  color: #404040;
+}
+ul.userList .userFriendCode,
+ul.userList .userTwitterAccount,
+ul.userList .userRating,
+ul.userList .userLastLoginTime {
+  color: #404040;
+}
+ul.userList .userFriendCode {
+  width: 300px;
+  background-color: #f6f6f6;
+  padding: 5px 10px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+/* dmUserList */
+ul.dmUserList {
+  border-top: 1px solid #bfbfbf;
+}
+ul.dmUserList li {
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
+  border-right: 1px solid #bfbfbf;
+  padding: 10px 0 5px 0;
+  cursor: pointer;
+}
+ul.dmUserList li.active {
+  background-color: #eeeeee;
+  border-right-color: #eeeeee;
+}
+ul.dmUserList li:hover,
+ul.dmUserList li.active:hover {
+  background-color: #c7eefe;
+}
+ul.dmUserList .userImage {
+  float: left;
+  overflow: hidden;
+}
+ul.dmUserList .userInfo {
+  margin-left: 71px;
+}
+ul.dmUserList .userInfoLine {
+  margin-bottom: 5px;
+}
+ul.dmUserList .userName {
+  font-weight: bold;
+  color: #404040;
+}
+ul.dmUserList .userSendTime {
+  color: #404040;
+}
+ul.dmUserList .userFloat {
+  position: absolute;
+  margin-right: 10px;
+  right: 0;
+  text-align: right;
+  top: 30px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* dmMessageColumn */
+.dmMessageColumn {
+  margin-left: 0px;
+  border-top: 1px solid #bfbfbf;
+  background-color: #eeeeee;
+}
+
+/* dmMessageList */
+ul.dmMessageList li {
+  position: relative;
+  min-height: 72px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #ffffff;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+ul.dmMessageList li.opponent .userImage {
+  float: left;
+  overflow: hidden;
+}
+ul.dmMessageList li.my .userImage {
+  float: right;
+  overflow: hidden;
+}
+ul.dmMessageList li.opponent .messageInfo {
+  margin-left: 71px;
+}
+ul.dmMessageList li.my .messageInfo {
+  margin-right: 71px;
+}
+ul.dmMessageList .messageInfoLine {
+  margin-bottom: 5px;
+}
+ul.dmMessageList .messageBody {
+  color: #404040;
+}
+
+/* chatRoom */
+.chatRoom .chatUsers {
+  position: relative;
+  width: 97%;
+  margin-top: 5px;
+  padding: 5px;
+  background-color: #eeeeee;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.chatRoom .chatUserCount {
+  float: left;
+}
+.chatRoom .chatUserOne {
+  float: left;
+  margin-left: 5px;
+}
+.chatRoom .chatForm {
+  position: relative;
+  margin-top: 5px;
+}
+.chatRoom .chatAutoReload {
+  position: absolute;
+  right: 0;
+  bottom: 25px
+}
+
+/* chatList */
+ul.chatList {
+  margin-top: 5px;
+  border-top: 1px solid #bfbfbf;
+}
+ul.chatList li {
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
+  padding-top: 2px;
+}
+ul.chatList .chatUserImage {
+  float: left;
+  overflow: hidden;
+}
+ul.chatList .chatInfo {
+  margin-left: 42px;
+}
+ul.chatList .chatInfoLine {
+  margin-bottom: 0;
+}
+ul.chatList .chatUserName {
+  font-weight: bold;
+  color: #404040;
+}
+ul.chatList .chatBody {
+  color: #404040;
+}
+
+ul.chatList li.toMe {
+  background-color: #fee9cc;
+}
+
+ul.chatList li.system .chatUserName {
+  color: #808080;
+}
+
+/* chatReadMore */
+ul.chatReadMore {
+  border-bottom: 1px solid #bfbfbf;
+}
+ul.chatReadMore li {
+  width: 100%;
+  text-align: center;
+}
+ul.chatReadMore li a {
+  display:block;
+  padding: 10px;
+  background-color: #eeeeee;
+  font-weight: bold;
+}
+ul.chatReadMore li a:hover {
+  background-color: #c7eefe;
+  text-decoration: none;
+}
+ul.chatReadMore li span {
+  display:block;
+  padding: 10px;
+  background-color: #eeeeee;
+  font-weight: bold;
+}
+
+/* recordList */
+ul.recordList {
+  border-top: 1px solid #bfbfbf;
+}
+ul.recordList li {
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 10px 0 5px 0;
+}
+ul.recordList .recordInfoLine {
+  margin-bottom: 3px;
+}
+ul.recordList .recordType,
+ul.recordList .recordSeries,
+ul.recordList .recordRule {
+  font-weight: bold;
+  color: #404040;
+}
+ul.recordList .recordUser {
+  float: left;
+  margin-right: 10px;
+  padding: 3px;
+}
+ul.recordList .recordWinner {
+  background-color: #f4f4f4;
+}
+ul.recordList .recordResult {
+  float: left;
+  margin-top: 6px;
+  margin-right: 10px;
+  font-weight: bold;
+  color: #404040;
+  font-size: 150%;
+}
+ul.recordList .recordTime {
+  color: #404040;
+}
+
+/* mypageSettings */
+form.mypageSettingsForm {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #bfbfbf;
+}
+form.mypageSettingsForm .title {
+  margin-bottom: 7px;
+  font-size: 110%;
+  font-weight: bold;
+}
+form.mypageSettingsForm .remarks {
+  margin-top: 7px;
+}
+form.mypageSettingsForm .form {
+  background-color: #f6f6f6;
+  padding: 8px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+/* matchingList */
+.matchingStatusTitle {
+  padding-top: 15px;
+  margin-bottom: 7px;
+  font-size: 110%;
+  font-weight: bold;
+}
+ul.matchingList {
+  border-top: 1px solid #bfbfbf;
+}
+ul.matchingList li {
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 10px 0 5px 0;
+}
+ul.matchingList .matchingInfoLine {
+  margin-bottom: 3px;
+}
+ul.matchingList .matchingSeries,
+ul.matchingList .matchingRule,
+ul.matchingList .matchingWin,
+ul.matchingList .matchingChatCount,
+ul.matchingList .matchingChatLastInsert {
+  font-weight: bold;
+  color: #404040;
+}
+ul.matchingList .matchingUser {
+  float: left;
+  margin-right: 5px;
+  padding: 3px;
+}
+ul.matchingList .matchingWinner {
+  background-color: #f4f4f4;
+}
+ul.matchingList .matchingResult {
+  float: left;
+  margin-top: 6px;
+  margin-right: 10px;
+  font-weight: bold;
+  color: #404040;
+  font-size: 150%;
+}
+ul.matchingList .matchingTime {
+  color: #404040;
+}
+
+/* contestList */
+ul.contestList {
+  border-top: 1px solid #bfbfbf;
+}
+ul.contestList li {
+  width: 100%;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 10px 0 5px 0;
+}
+ul.contestList .contestInfoLine {
+  margin-bottom: 3px;
+}
+ul.contestList .contestTime,
+ul.contestList .contestType,
+ul.contestList .contestRateVolatilities,
+ul.contestList .contestSeries,
+ul.contestList .contestRule,
+ul.contestList .contestRankConditions,
+ul.contestList .contestWin,
+ul.contestList .contestMatchNum,
+ul.contestList .contestRemarks,
+ul.contestList .contestChatCount,
+ul.contestList .contestChatLastInsert {
+  font-weight: bold;
+  color: #404040;
+}
+ul.contestList .contestUser {
+  float: left;
+  margin-right: 5px;
+  padding: 3px;
+}
+ul.contestList .contestVictory {
+  font-weight: bold;
+  color: #404040;
+}
+ul.contestList .contestWinner {
+  background-color: #f4f4f4;
+}
+
+/* contest */
+.contest_entryUser {
+  float: left;
+  margin-right: 5px;
+  padding: 3px;
+}
+
+/* contestOwnerButtons */
+.contestOwnerButtons {
+  margin-bottom: 20px;
+  border-top: 1px solid #bfbfbf;
+  border-bottom: 1px solid #bfbfbf;
+  padding: 5px;
+}
+
+/* contestUserTable */
+table.contestUserTable td.center {
+  text-align: center;
+}
+table.contestUserTable td.middle {
+  vertical-align: middle;
+}
+table.contestUserTable td.bold {
+  font-weight: bold;
+}
+table.contestUserTable tr.me,
+table.contestUserTable tr.myMatch {
+  background-color: #fee9cc;
+}
+table.contestUserTable .userImage {
+  float: left;
+  overflow: hidden;
+}
+table.contestUserTable .userInfo {
+  margin-left: 45px;
+}
+table.contestUserTable .userImageSmall {
+  float: left;
+  overflow: hidden;
+}
+table.contestUserTable .userInfoSmall {
+  margin-left: 23px;
+}
+table.contestUserTable span.winMark {
+  color: #cc0000;
+  font-weight: bold;
+}
+table.contestUserTable span.loseMark {
+  color: #0000cc;
+  font-weight: bold;
+}
+table.contestUserTable .contestMatchResult {
+  font-weight: bold;
+  color: #404040;
+  font-size: 150%;
+}
+table.contestUserTable .contestMatchResult span.warning {
+  font-weight: normal;
+  color: #cc0000;
+  font-size: 12px;
+}
+table.contestUserTable .contestMatchResult span.date {
+  font-weight: normal;
+  font-size: 12px;
+}
+
+/* contestResultTable */
+table.contestResultTable td {
+  padding: 1px;
+  line-height: 1.2;
+}
+table.contestResultTable td.center {
+  text-align: center;
+}
+table.contestResultTable td.middle {
+  vertical-align: middle;
+}
+table.contestResultTable td.bold {
+  font-weight: bold;
+}
+table.contestResultTable td.noMatch {
+  background-color: #eeeeee;
+}
+table.contestResultTable tr.me {
+  background-color: #fee9cc;
+}
+table.contestResultTable .userImage {
+  float: left;
+  overflow: hidden;
+}
+table.contestResultTable .userInfo {
+  margin-left: 41px;
+}
+table.contestResultTable .userImageSmall {
+  float: left;
+  overflow: hidden;
+}
+table.contestResultTable .userInfoSmall {
+  margin-left: 21px;
+}
+table.contestResultTable span.winMark {
+  color: #cc0000;
+  font-weight: bold;
+}
+table.contestResultTable span.loseMark {
+  color: #0000cc;
+  font-weight: bold;
+}
+
+/* contestDocs */
+.contestDocs h3 {
+  background-color: #eeeeee;
+  padding-left: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.contestDocs img {
+  border: 10px solid #bfbfbf;
+}
+
+/* statsTable */
+table.statsTable td {
+  padding: 1px;
+}
+table.statsTable td.center {
+  text-align: center;
+}
+table.statsTable td.right {
+  text-align: right;
+}
+table.statsTable td.fontWeightNormal {
+  font-weight: normal;
+}
+table.statsTable tr.me {
+  background-color: #fee9cc;
+}
+
+/* event */
+.greyBox {
+  background-color: #f6f6f6;
+  padding: 8px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+

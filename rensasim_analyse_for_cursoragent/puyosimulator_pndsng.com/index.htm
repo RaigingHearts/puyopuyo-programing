@@ -1,0 +1,92 @@
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<meta name="Keywords" content="ぷよ,ぷよぷよ,ぷよ図,連鎖,シミュ,シミュレータ,エディタ">
+	<link rel="shortcut icon" href="kanbanpuyo.gif">
+	<title>ぷよシミュレータ（ぷよ図エディター）</title>
+	<script type="text/javascript" src="./src/Editor.js"></script>
+	<link rel="stylesheet" type="text/css" href="./stylesheet/style.css">
+</head>
+<body>
+	<div id="puyo">
+		<div id="left">
+			<div style="position: relative;">
+				<script language="JavaScript" type="text/javascript"><!--
+					var editor = new Editor();
+					editor.init();
+				// --></script>
+				<noscript>
+				【ぷよシミュレータ】<br>
+				JavaScriptが無効になっています。
+				</noscript>
+			</div>
+		</div><!-- left -->
+
+		<div id="right">
+			<span style="color:red">
+				このページはmattulwan氏のサイトに掲載されていたぷよぷよツールです。
+				mattulwan氏の<a href="http://1st.geocities.jp/mattulwan/puyo_simulator/">ホームページ</a>機能停止に伴い復元させていただきました。
+			</span><br><br>
+
+			<dl style="margin-top: 0;">
+				<dt>使い方</dt>
+				<dd>auto: 自動実行。連鎖が終わるまで勝手に消えてくれます。
+				<dd>speed: 自動実行の速度を変えます。
+				<dd>step: 1ステップ毎に実行します。
+				<dd>return: 発火前の状態に戻ります。
+				<dd>reset: フィールドを空にします。
+				<dd>load: URLの情報からフィールドを構築します。
+				<dd>URL: 現在のぷよ配置を記憶したURLです。
+				<dd>iframe: HTMLに組み込むと、縮小版のシミュを挿入できます。
+				<dd>save: 現在のぷよ配置を元にURL、iframeコードを出力します。
+				<dd>memory: ぷよ配置を保存します。（Cookieを利用）
+			</dl>
+
+			<div style="float: left; width: 320px; ">
+				[更新履歴]
+				<div id="rireki">
+					2019/05/20 サルベージできなかった画像出力機能を新設しました。<br>
+					2019/04/01 geocities消滅に伴いmattulwan氏のサイトからpndsngがサルベージしました。<br>
+					2011/07/26 ぷよの消え方を変更<br>
+					2011/01/15 URL短縮機能追加<br>
+					<!-- 2010/05/23 1日1,000hit超え(1,326)<br> -->
+					2010/04/11 多色ボーナス計算の不具合を修正<br>
+					<!-- 2010/04/02 100,000hit<br> -->
+					2010/02/27 メモリー機能追加<br>
+					2009/10/19 得点ぷよとかたぷよを使えるようにした<br>
+					2009/10/13 PNG画像を生成できるようにした<br>
+					2009/06/08 古いIEで、画像が透過されないのを修正<br>
+					2009/06/01 背景を増やした<br>
+					2009/05/24 カーソルを表示するようにした<br>
+					2009/05/19 たまにぷよが正常に消えないバグを修正<br>
+					　　　　　　　　iframeの表示を多分高速化した<br>
+					2009/05/18 画面外のぷよの表示を変えた<br>
+					2009/05/14 自動実行の速度を変えられるようにした<br>
+					2009/05/10 Operaでボタンが正常に作動しないのと、<br>
+					　　　　　　　　挿入時の消すの動作を修正した<br>
+					2009/05/02 予告ぷよを表示するようにした<br>
+					2009/04/30 背景と、その他細かい所を修正<br>
+					2009/04/23 挿入機能追加<br>
+					～中略～<br>
+					2009/04/11 公開<br>
+				</div>
+
+				<div style="margin: 30px 0;">
+					<a href="./"><img src="./matsu_ba.gif" alt="現状把握！ぷよぷよ２ちゃんねる" border="0"></a>
+				</div>
+			</div>
+
+			<div style="float: right; width: 128px">
+				[iframe見本]<br>
+				<iframe src="view.html?a54ca3cacbdcec3bd2cb2de3" width="128" height="270" frameborder="0" scrolling="no"></iframe>
+			</div>
+
+			<br class="clear">
+		</div><!-- right -->
+
+		<br class="clear">
+	</div><!-- puyo -->
+</body>
+</html>
