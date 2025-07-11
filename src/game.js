@@ -9,6 +9,7 @@ let mode; // ゲームの現在の状況
 let frame; // ゲームの現在フレーム（1/60秒ごとに1追加される）
 let combinationCount = 0; // 何連鎖かどうか
 let isGameLoopStopped = false; // Ver.1.9で追加: ゲームループの完全停止フラグ
+let zenkeshiWaitStart = null;
 function initialize() {
   // 画像を準備する
   PuyoImage.initialize();
@@ -70,10 +71,20 @@ function loop() {
           // 全消しの処理をする
           Stage.showZenkeshi();
           Score.addScore(3600);
+          zenkeshiWaitStart = performance.now();
+          mode = 'zenkeshiWait';
+          break;
         }
         combinationCount = 0;
         // 消せなかったら、新しいぷよを登場させる
         mode = 'newPuyo'
+      }
+      break;
+    case 'zenkeshiWait':
+      if (zenkeshiWaitStart && performance.now() - zenkeshiWaitStart >= Config.zenkeshiWait) {
+        Stage.hideZenkeshi();
+        mode = 'newPuyo';
+        zenkeshiWaitStart = null;
       }
       break;
     case 'erasing':
@@ -83,8 +94,8 @@ function loop() {
       }
       break;
     case 'newPuyo':
-      // 新しいぷよ生成時にも全消し演出をリセット
-      Stage.hideZenkeshi();
+      // 新しいぷよ生成時にも全消し演出をリセット（不要になったので削除）
+      // Stage.hideZenkeshi();
       if (!Player.createNewPuyo()) {
         // 新しい操作用ぷよを作成出来なかったら、ゲームオーバー
         mode = 'gameOver';

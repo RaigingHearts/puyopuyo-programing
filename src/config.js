@@ -24,6 +24,7 @@ Config.playerGroundFrame = 20; // 何フレーム接地したらぷよを固定�
 Config.playerMoveFrame = 10; // 左右移動に消費するフレーム数
 Config.playerRotateFrame = 10; // 回転に消費するフレーム数
 Config.zenkeshiDuration = 150; // 全消し時のアニメーションミリセカンド
+Config.zenkeshiWait = 1000; // 全消し演出の表示ウェイト（ミリ秒）
 Config.gameOverFrame = 3000; // ゲームオーバー演出のサイクルフレーム
 // Ver.1.5で追加: 幽霊ぷよ機能の設定
 Config.ghostPuyoOpacity = 0.3; // 幽霊ぷよの透明度（0.0～1.0）
