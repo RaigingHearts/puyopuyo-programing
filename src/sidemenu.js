@@ -1,42 +1,35 @@
 // Ver.1.6で追加: レフトサイドメニュー機能管理クラス
 class SideMenu {
   static initialize() {
-    this.setupEventListeners();
+    // setupEventListenersの呼び出しを削除し、ここで直接イベントリスナーを設定
     // カスタム盤面編集ボタン
     document.getElementById('btn-custom-editor').addEventListener('click', () => {
       this.openCustomEditor();
     });
-    
     // プリセット読み込みボタン
     document.getElementById('btn-load-preset').addEventListener('click', () => {
       this.showPresetModal();
     });
-    
     // 盤面保存ボタン
     document.getElementById('btn-save-field').addEventListener('click', () => {
       this.saveCurrentField();
     });
-    
     // 盤面読み込みボタン
     document.getElementById('btn-load-field').addEventListener('click', () => {
       this.showLoadFieldModal();
     });
-    
     // 外部コード読み込みボタン
     document.getElementById('btn-import-field').addEventListener('click', () => {
       this.showImportFieldModal();
     });
-    
     // 連鎖プレビューボタン
-    document.getElementById('btn-chain-preview').addEventListener('click', () => {
+    document.getElementById('btn-chain-preview')?.addEventListener('click', () => {
       this.startChainPreview();
     });
-    
     // ステップ連鎖ボタン
-    document.getElementById('btn-step-chain').addEventListener('click', () => {
+    document.getElementById('btn-step-chain')?.addEventListener('click', () => {
       this.startStepChain();
     });
-
     const exportBtn = document.getElementById('btn-export-field-code');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => {
