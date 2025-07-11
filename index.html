@@ -55,6 +55,13 @@
             <!-- フィールドコード管理セクション -->
             <div class="menu-section" style="margin-bottom: 25px;">
                 <h3 style="color: #f39c12; margin-bottom: 15px;">💾 データ管理</h3>
+                <label for="field-code-format" style="display:block; margin-bottom:4px; color:#333;">出力形式選択</label>
+                <select id="field-code-format" style="width:100%; padding:6px; margin-bottom:8px; border-radius:4px; border:1px solid #ccc;">
+                  <option value="standard">標準形式（6×12, 0-6, 62進数）</option>
+                  <option value="puyop">puyop.com形式（6×12, 1-6, 62進数）</option>
+                  <option value="pndsng">pndsng.com形式（13×6, a-k, RLE圧縮）</option>
+                </select>
+                <button id="btn-export-field-code" style="width:100%; padding:10px; margin-bottom:8px; background-color:#2980b9; color:white; border:none; border-radius:5px; cursor:pointer; font-size:14px;">🔄 フィールドコード出力</button>
                 <button id="btn-save-field" style="
                     width: 100%; 
                     padding: 10px; 

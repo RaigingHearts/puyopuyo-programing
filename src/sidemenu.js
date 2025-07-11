@@ -41,6 +41,22 @@ class SideMenu {
     document.getElementById('btn-step-chain').addEventListener('click', () => {
       this.startStepChain();
     });
+
+    const exportBtn = document.getElementById('btn-export-field-code');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => {
+        const format = document.getElementById('field-code-format').value;
+        let code = '';
+        if (format === 'standard') {
+          code = SideMenu.encodeStandard();
+        } else if (format === 'puyop') {
+          code = SideMenu.encodePuyop();
+        } else if (format === 'pndsng') {
+          code = SideMenu.encodePndsng();
+        }
+        SideMenu.showExportCodeModal(code, format);
+      });
+    }
   }
   
   // カスタム盤面編集画面を開く
@@ -595,5 +611,88 @@ class SideMenu {
         document.querySelector('.modal').remove();
       }
     }
+  }
+
+  // 標準形式（6x12, 0-6, 62進数）
+  static encodeStandard() {
+    let code = '';
+    for (let y = 0; y < Config.stageRows; y++) {
+      for (let x = 0; x < Config.stageCols; x++) {
+        const cell = Stage.board[y] && Stage.board[y][x];
+        code += cell && cell.puyo ? cell.puyo : '0';
+      }
+    }
+    // 62進数変換（0-9a-zA-Z[]）
+    const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ[]';
+    let result = '';
+    for (let i = 0; i < code.length; i += 1) {
+      result += chars[parseInt(code[i], 10)] || '0';
+    }
+    return result;
+  }
+
+  // puyop.com形式（6x12, 1-6, 62進数）
+  static encodePuyop() {
+    let code = '';
+    for (let y = 0; y < Config.stageRows; y++) {
+      for (let x = 0; x < Config.stageCols; x++) {
+        const cell = Stage.board[y] && Stage.board[y][x];
+        // 0→0, 1-5→1-5, 6(おじゃま)→6
+        code += cell && cell.puyo ? cell.puyo : '0';
+      }
+    }
+    // 62進数変換
+    const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ[]';
+    let result = '';
+    for (let i = 0; i < code.length; i += 1) {
+      result += chars[parseInt(code[i], 10)] || '0';
+    }
+    return result;
+  }
+
+  // pndsng.com形式（13x6, a-k, RLE圧縮）
+  static encodePndsng() {
+    // 13x6の空配列を用意し、6x12のデータを左上詰めでコピー
+    const row = 13, col = 6;
+    const map = Array.from({ length: row }, (_, y) => Array.from({ length: col }, (_, x) => 11)); // BLANK=11
+    for (let y = 0; y < Math.min(Config.stageRows, row); y++) {
+      for (let x = 0; x < Math.min(Config.stageCols, col); x++) {
+        const cell = Stage.board[y] && Stage.board[y][x];
+        map[y][x] = cell && cell.puyo ? cell.puyo - 1 : 11; // 0:空白, 1:赤→0, ...
+      }
+    }
+    // RLE圧縮
+    const key = ['a','b','c','d','e','f','g','h','i','j','k','l'];
+    let pre = key[map[0][0]];
+    let length = 0;
+    let code = key[map[0][0]];
+    for (let y = 0; y < row; y++) {
+      for (let x = 0; x < col; x++) {
+        if (key[map[y][x]] === pre) {
+          length++;
+        } else {
+          if (length !== 1) code += length;
+          code += key[map[y][x]];
+          length = 1;
+        }
+        pre = key[map[y][x]];
+      }
+    }
+    if (length !== 1) code += length;
+    return code;
+  }
+
+  // 出力コード表示用モーダル
+  static showExportCodeModal(code, format) {
+    const formatLabel = {
+      'standard': '標準形式',
+      'puyop': 'puyop.com形式',
+      'pndsng': 'pndsng.com形式'
+    };
+    const modal = this.createModal(
+      `フィールドコード出力（${formatLabel[format] || format}）`,
+      `<textarea style='width:100%;height:80px;font-size:16px;'>${code}</textarea>`
+    );
+    document.body.appendChild(modal);
   }
 }
