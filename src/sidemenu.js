@@ -2,11 +2,6 @@
 class SideMenu {
   static initialize() {
     this.setupEventListeners();
-    this.loadSavedFieldsList();
-  }
-  
-  // イベントリスナーの設定
-  static setupEventListeners() {
     // カスタム盤面編集ボタン
     document.getElementById('btn-custom-editor').addEventListener('click', () => {
       this.openCustomEditor();
@@ -77,7 +72,6 @@ class SideMenu {
     
     if (name && name.trim()) {
       this.saveFieldToStorage(name.trim(), fieldCode);
-      this.loadSavedFieldsList();
       alert('盤面を保存しました');
     }
   }
@@ -385,48 +379,6 @@ class SideMenu {
     localStorage.setItem('puyoSavedFields', JSON.stringify(savedFields));
   }
   
-  // 保存済み盤面リストを更新
-  static loadSavedFieldsList() {
-    const savedFields = JSON.parse(localStorage.getItem('puyoSavedFields') || '{}');
-    const listElement = document.getElementById('saved-fields-list');
-    
-    if (Object.keys(savedFields).length === 0) {
-      listElement.innerHTML = '<p style="margin: 0; color: #bdc3c7; text-align: center; font-size: 12px;">保存済みデータなし</p>';
-      return;
-    }
-    
-    let html = '';
-    Object.entries(savedFields).forEach(([name, data]) => {
-      const date = new Date(data.date).toLocaleDateString();
-      html += `
-        <div style="
-          margin-bottom: 8px; 
-          padding: 8px; 
-          background-color: #485562; 
-          border-radius: 3px; 
-          cursor: pointer;
-          font-size: 12px;
-        " onclick="SideMenu.loadFieldFromStorage('${name}')">
-          <div style="font-weight: bold; color: #ecf0f1;">${name}</div>
-          <div style="color: #bdc3c7;">${date}</div>
-        </div>
-      `;
-    });
-    
-    listElement.innerHTML = html;
-  }
-  
-  // ストレージから盤面を読み込み
-  static loadFieldFromStorage(name) {
-    const savedFields = JSON.parse(localStorage.getItem('puyoSavedFields') || '{}');
-    if (savedFields[name]) {
-      if (confirm(`「${name}」を読み込みますか？現在の盤面は失われます。`)) {
-        this.loadFieldFromCode(savedFields[name].code);
-        alert('盤面を読み込みました');
-      }
-    }
-  }
-  
   // モーダルダイアログの作成
   static createModal(title, content) {
     const modal = document.createElement('div');
@@ -574,7 +526,6 @@ class SideMenu {
       const savedFields = JSON.parse(localStorage.getItem('puyoSavedFields') || '{}');
       delete savedFields[name];
       localStorage.setItem('puyoSavedFields', JSON.stringify(savedFields));
-      this.loadSavedFieldsList();
       alert('削除しました');
     }
   }
