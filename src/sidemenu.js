@@ -513,6 +513,17 @@ class SideMenu {
     }
   }
   
+  // ストレージから盤面を読み込み
+  static loadFieldFromStorage(name) {
+    const savedFields = JSON.parse(localStorage.getItem('puyoSavedFields') || '{}');
+    if (savedFields[name]) {
+      if (confirm(`「${name}」を読み込みますか？現在の盤面は失われます。`)) {
+        this.loadFieldFromCode(savedFields[name].code);
+        alert('盤面を読み込みました');
+      }
+    }
+  }
+  
   // ストレージから盤面データを削除
   static deleteFieldFromStorage(name) {
     if (confirm(`「${name}」を削除しますか？`)) {
