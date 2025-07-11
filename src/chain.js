@@ -144,20 +144,24 @@ class ChainPreview {
   static simulateChain() {
     let chainCount = 0;
     let totalScore = 0;
-    
+    // 0連鎖目（初期盤面）を最初に追加
+    this.chainSteps = [{
+      step: 0,
+      board: this.copyPreviewBoard(),
+      erasedPuyos: [],
+      score: 0,
+      chainScore: 0
+    }];
     while (true) {
       // 落下処理
       this.simulateFall();
-      
       // 消去判定
       const eraseResult = this.simulateErase();
       if (!eraseResult) {
         break; // 消去できない場合は連鎖終了
       }
-      
       chainCount++;
       totalScore += this.calculateChainScore(eraseResult, chainCount);
-      
       // 連鎖ステップを保存
       this.chainSteps.push({
         step: chainCount,
@@ -166,8 +170,6 @@ class ChainPreview {
         score: totalScore,
         chainScore: this.calculateChainScore(eraseResult, chainCount)
       });
-      
-      // 無限ループ防止
       if (chainCount > 20) {
         break;
       }
