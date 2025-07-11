@@ -43,10 +43,11 @@ class ChainPreview {
     // プレビューUI作成（タイプに応じて分岐）
     if (this.previewType === 'main') {
       this.createMainPreviewUI();
+      // showStep(0)はコントロールUIの「次」ボタンで進める
     } else {
       this.createPreviewUI();
+      this.showStep(0);
     }
-    this.showStep(0);
   }
   
   // 連鎖プレビューを停止

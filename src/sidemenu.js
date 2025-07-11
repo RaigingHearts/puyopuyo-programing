@@ -239,19 +239,6 @@ class SideMenu {
           font-size: 14px;
         ">🔍 連鎖プレビュー</button>
       </div>
-      <div style="margin-bottom: 15px;">
-        <button onclick="SideMenu.startCustomStepChain()" style="
-          width: 200px; 
-          padding: 12px; 
-          margin: 5px; 
-          background-color: #16a085; 
-          color: white; 
-          border: none; 
-          border-radius: 5px; 
-          cursor: pointer;
-          font-size: 14px;
-        ">📊 ステップ連鎖</button>
-      </div>
       <div>
         <button onclick="SideMenu.resumeNormalPlay()" style="
           width: 200px; 
