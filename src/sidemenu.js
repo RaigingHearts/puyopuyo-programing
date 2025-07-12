@@ -49,7 +49,20 @@ class SideMenu {
   
   // カスタム盤面編集画面を開く
   static openCustomEditor() {
-    window.open('custom.html', '_blank', 'width=800,height=600');
+    // 既存のカスタムエディタウィンドウをチェック
+    if (this.customEditorWindow && !this.customEditorWindow.closed) {
+      // 既存ウィンドウが存在する場合は最前面にフォーカス
+      this.customEditorWindow.focus();
+      return;
+    }
+    
+    // 新規ウィンドウを作成
+    this.customEditorWindow = window.open('custom.html', '_blank', 'width=800,height=600');
+    
+    // ウィンドウが閉じられた時の処理
+    this.customEditorWindow.addEventListener('beforeunload', () => {
+      this.customEditorWindow = null;
+    });
   }
   
   // プリセット選択モーダルを表示
@@ -430,16 +443,25 @@ class SideMenu {
     return `
       <div style="margin-bottom: 15px;">
         <h4>連鎖の種</h4>
-        <button onclick="SideMenu.loadPreset('chain_seed_1')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">2連鎖の種</button>
-        <button onclick="SideMenu.loadPreset('chain_seed_2')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">3連鎖の種</button>
-        <button onclick="SideMenu.loadPreset('chain_seed_3')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">4連鎖の種</button>
+        <button onclick="SideMenu.loadPreset('chain_seed_1')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">3連鎖の種</button>
+        <button onclick="SideMenu.loadPreset('chain_seed_2')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">4連鎖の種</button>
+        <button onclick="SideMenu.loadPreset('chain_seed_3')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">5連鎖の種</button>
       </div>
       <div style="margin-bottom: 15px;">
-        <h4>大連鎖</h4>
-        <button onclick="SideMenu.loadPreset('big_chain_1')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">5連鎖</button>
-        <button onclick="SideMenu.loadPreset('big_chain_2')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">7連鎖</button>
-        <button onclick="SideMenu.loadPreset('big_chain_3')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">10連鎖</button>
-        <button onclick="SideMenu.loadPreset('test_17chain')" style="margin: 5px; padding: 8px; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">17連鎖テスト</button>
+        <h4>階段積み連鎖</h4>
+        <button onclick="SideMenu.loadPreset('stair_chain_1')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">階段5連鎖</button>
+        <button onclick="SideMenu.loadPreset('stair_chain_2')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">階段7連鎖</button>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <h4>実戦連鎖</h4>
+        <button onclick="SideMenu.loadPreset('practical_chain_1')" style="margin: 5px; padding: 8px; background-color: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer;">実戦3連鎖</button>
+        <button onclick="SideMenu.loadPreset('practical_chain_2')" style="margin: 5px; padding: 8px; background-color: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer;">実戦4連鎖</button>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <h4>高難度連鎖</h4>
+        <button onclick="SideMenu.loadPreset('advanced_chain_1')" style="margin: 5px; padding: 8px; background-color: #e67e22; color: white; border: none; border-radius: 3px; cursor: pointer;">上級8連鎖</button>
+        <button onclick="SideMenu.loadPreset('advanced_chain_2')" style="margin: 5px; padding: 8px; background-color: #e67e22; color: white; border: none; border-radius: 3px; cursor: pointer;">上級10連鎖</button>
+        <button onclick="SideMenu.loadPreset('stair_17chain')" style="margin: 5px; padding: 8px; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">17連鎖階段積み</button>
       </div>
     `;
   }
@@ -537,13 +559,25 @@ class SideMenu {
   // プリセット盤面の読み込み
   static loadPreset(presetType) {
     const presets = {
-      'chain_seed_1': '000000000000000000000000000000000000000000000000000000001100001200001200',
-      'chain_seed_2': '000000000000000000000000000000000000000000001100001200001200001300001300',
-      'chain_seed_3': '000000000000000000000000000000001100001200001200001300001300001400001400',
-      'big_chain_1': '000000000000000000000000112300112300112300445500445500445500445500445500',
-      'big_chain_2': '000000000000112300112300112300445500445500445500112300112300445500445500',
-      'big_chain_3': '112300112300112300112300445500445500445500445500112300445500112300445500',
-      'test_17chain': '034350034353234354103435245124245124451234245123234513123451123451123451'  // Ver.1.8で追加: 17連鎖テスト用
+      // 連鎖の種（基本）
+      'chain_seed_1': '000000000000000000000000000000000000000000000000000000001100001100001100', // 3連鎖の種
+      'chain_seed_2': '000000000000000000000000000000000000000000001100001100001200001200001200', // 4連鎖の種
+      'chain_seed_3': '000000000000000000000000000000001100001100001200001200001300001300001300', // 5連鎖の種
+      
+      // 階段積み連鎖（基本）
+      'stair_chain_1': '000000000000000000000000000000000000000000001100001200001300001400001500', // 階段5連鎖
+      'stair_chain_2': '000000000000000000000000000000001100001200001300001400001500002100002200', // 階段7連鎖
+      
+      // 実戦的な連鎖
+      'practical_chain_1': '000000000000000000000000000000000000000000001100001100001200001200001300', // 実戦3連鎖
+      'practical_chain_2': '000000000000000000000000000000001100001100001200001200001300001300001400', // 実戦4連鎖
+      
+      // 高難度連鎖
+      'advanced_chain_1': '000000000000000000000000001100001200001300001400001500002100002200002300', // 上級8連鎖
+      'advanced_chain_2': '000000000000001100001200001300001400001500002100002200002300002400002500', // 上級10連鎖
+      
+      // 17連鎖階段積み（提供されたデータを基に作成）
+      'stair_17chain': '432412043242043243043241525131151321251323251323243213154321154321154321'  // 17連鎖階段積み
     };
     
     if (presets[presetType]) {
