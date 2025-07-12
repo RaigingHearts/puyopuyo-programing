@@ -206,11 +206,10 @@
                 <!-- ツールセクション -->
                 <div class="tools-section">
                     <h3>🔧 ツール</h3>
-                    <button class="tool-button clear" onclick="CustomEditor.clearField()">🗑️ 盤面クリア</button>
-                    <button class="tool-button save" onclick="CustomEditor.saveField()">💾 盤面保存</button>
-                    <button class="tool-button load" onclick="CustomEditor.loadField()">📂 盤面読み込み</button>
-                    <button class="tool-button load" onclick="CustomEditor.importExternalField()">🌐 外部コード読み込み</button>
-                    <button class="tool-button apply" onclick="CustomEditor.applyToMain()">✅ メイン盤面に適用</button>
+                    <button class="tool-button clear" onclick="CustomEditor.clearField()">🗑️ クリア</button>
+                    <button class="tool-button save" onclick="CustomEditor.saveField()">💾 保存</button>
+                    <button class="tool-button load" onclick="CustomEditor.loadField()">📂 読み込み</button>
+                    <button class="tool-button import" onclick="CustomEditor.importExternalField()">🌐 外部コード読み込み</button>
                     <button class="tool-button preview" onclick="CustomEditor.previewChain()">🔍 連鎖プレビュー</button>
                 </div>
                 
@@ -587,17 +586,6 @@
                     }
                 } else {
                     alert('フィールドコードを入力してください');
-                }
-            }
-            
-            static applyToMain() {
-                if (confirm('メイン盤面に適用しますか？現在の盤面は失われます。')) {
-                    if (window.opener && window.opener.SideMenu) {
-                        window.opener.SideMenu.loadFieldFromCode(this.generateFieldCode());
-                        alert('メイン盤面に適用しました');
-                    } else {
-                        alert('メイン画面が見つかりません');
-                    }
                 }
             }
             
