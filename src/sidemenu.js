@@ -442,32 +442,74 @@ class SideMenu {
   static getPresetContent() {
     return `
       <div style="margin-bottom: 15px;">
-        <h4>連鎖の種</h4>
-        <button onclick="SideMenu.loadPreset('chain_seed_1')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">3連鎖の種</button>
-        <button onclick="SideMenu.loadPreset('chain_seed_2')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">4連鎖の種</button>
-        <button onclick="SideMenu.loadPreset('chain_seed_3')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">5連鎖の種</button>
+        <h4>通常プリセット（テンプレート）</h4>
+        <button onclick="SideMenu.showPresetDetail('template_chain_seed')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">連鎖の種テンプレート</button>
+        <button onclick="SideMenu.showPresetDetail('template_stair_chain')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">階段積み連鎖テンプレート</button>
+        <button onclick="SideMenu.showPresetDetail('template_practical_chain')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">実戦連鎖テンプレート</button>
+        <button onclick="SideMenu.showPresetDetail('template_advanced_chain')" style="margin: 5px; padding: 8px; background-color: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer;">高難度連鎖テンプレート</button>
       </div>
       <div style="margin-bottom: 15px;">
-        <h4>階段積み連鎖</h4>
-        <button onclick="SideMenu.loadPreset('stair_chain_1')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">階段5連鎖</button>
-        <button onclick="SideMenu.loadPreset('stair_chain_2')" style="margin: 5px; padding: 8px; background-color: #9b59b6; color: white; border: none; border-radius: 3px; cursor: pointer;">階段7連鎖</button>
+        <h4>17連鎖階段積み</h4>
+        <button onclick="SideMenu.showPresetDetail('stair_17chain')" style="margin: 5px; padding: 8px; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">17連鎖階段積み</button>
       </div>
       <div style="margin-bottom: 15px;">
-        <h4>実戦連鎖</h4>
-        <button onclick="SideMenu.loadPreset('practical_chain_1')" style="margin: 5px; padding: 8px; background-color: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer;">実戦3連鎖</button>
-        <button onclick="SideMenu.loadPreset('practical_chain_2')" style="margin: 5px; padding: 8px; background-color: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer;">実戦4連鎖</button>
-      </div>
-      <div style="margin-bottom: 15px;">
-        <h4>高難度連鎖</h4>
-        <button onclick="SideMenu.loadPreset('advanced_chain_1')" style="margin: 5px; padding: 8px; background-color: #e67e22; color: white; border: none; border-radius: 3px; cursor: pointer;">上級8連鎖</button>
-        <button onclick="SideMenu.loadPreset('advanced_chain_2')" style="margin: 5px; padding: 8px; background-color: #e67e22; color: white; border: none; border-radius: 3px; cursor: pointer;">上級10連鎖</button>
-        <button onclick="SideMenu.loadPreset('stair_17chain')" style="margin: 5px; padding: 8px; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">17連鎖階段積み</button>
-      </div>
-      <div style="margin-bottom: 15px;">
-        <h4>連鎖ステップ</h4>
-        <button onclick="SideMenu.loadPreset('chain_1_step')" style="margin: 5px; padding: 8px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer;">1連鎖ステップ</button>
+        <h4>連鎖ステップ（1-17連鎖）</h4>
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px;">
+          <button onclick="SideMenu.showPresetDetail('step_1')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">1連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_2')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">2連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_3')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">3連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_4')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">4連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_5')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">5連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_6')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">6連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_7')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">7連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_8')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">8連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_9')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">9連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_10')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">10連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_11')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">11連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_12')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">12連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_13')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">13連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_14')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">14連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_15')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">15連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_16')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">16連鎖</button>
+          <button onclick="SideMenu.showPresetDetail('step_17')" style="padding: 6px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;">17連鎖</button>
+        </div>
       </div>
     `;
+  }
+  
+  // プリセット詳細表示
+  static showPresetDetail(presetType) {
+    if (Config.presets[presetType]) {
+      const modal = this.createModal(
+        `プリセット詳細: ${presetType}`,
+        `
+          <div style="margin-bottom: 15px;">
+            <strong>フィールドコード:</strong><br>
+            <textarea style="width:100%;height:60px;font-family:monospace;font-size:12px;margin-top:5px;" readonly>${Config.presets[presetType]}</textarea>
+          </div>
+          <div style="text-align: center;">
+            <button onclick="SideMenu.loadPreset('${presetType}'); this.closest('.modal').remove();" style="
+              padding: 8px 16px; 
+              background-color: #27ae60; 
+              color: white; 
+              border: none; 
+              border-radius: 5px; 
+              cursor: pointer;
+              margin-right: 10px;
+            ">読み込み</button>
+            <button onclick="this.closest('.modal').remove()" style="
+              padding: 8px 16px; 
+              background-color: #e74c3c; 
+              color: white; 
+              border: none; 
+              border-radius: 5px; 
+              cursor: pointer;
+            ">閉じる</button>
+          </div>
+        `
+      );
+      document.body.appendChild(modal);
+    }
   }
   
   // 盤面読み込みのコンテンツ
