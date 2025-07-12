@@ -463,6 +463,10 @@ class SideMenu {
         <button onclick="SideMenu.loadPreset('advanced_chain_2')" style="margin: 5px; padding: 8px; background-color: #e67e22; color: white; border: none; border-radius: 3px; cursor: pointer;">上級10連鎖</button>
         <button onclick="SideMenu.loadPreset('stair_17chain')" style="margin: 5px; padding: 8px; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">17連鎖階段積み</button>
       </div>
+      <div style="margin-bottom: 15px;">
+        <h4>連鎖ステップ</h4>
+        <button onclick="SideMenu.loadPreset('chain_1_step')" style="margin: 5px; padding: 8px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer;">1連鎖ステップ</button>
+      </div>
     `;
   }
   
@@ -558,31 +562,9 @@ class SideMenu {
   
   // プリセット盤面の読み込み
   static loadPreset(presetType) {
-    const presets = {
-      // 連鎖の種（基本）
-      'chain_seed_1': '000000000000000000000000000000000000000000000000000000001100001100001100', // 3連鎖の種
-      'chain_seed_2': '000000000000000000000000000000000000000000001100001100001200001200001200', // 4連鎖の種
-      'chain_seed_3': '000000000000000000000000000000001100001100001200001200001300001300001300', // 5連鎖の種
-      
-      // 階段積み連鎖（基本）
-      'stair_chain_1': '000000000000000000000000000000000000000000001100001200001300001400001500', // 階段5連鎖
-      'stair_chain_2': '000000000000000000000000000000001100001200001300001400001500002100002200', // 階段7連鎖
-      
-      // 実戦的な連鎖
-      'practical_chain_1': '000000000000000000000000000000000000000000001100001100001200001200001300', // 実戦3連鎖
-      'practical_chain_2': '000000000000000000000000000000001100001100001200001200001300001300001400', // 実戦4連鎖
-      
-      // 高難度連鎖
-      'advanced_chain_1': '000000000000000000000000001100001200001300001400001500002100002200002300', // 上級8連鎖
-      'advanced_chain_2': '000000000000001100001200001300001400001500002100002200002300002400002500', // 上級10連鎖
-      
-      // 17連鎖階段積み（提供されたデータを基に作成）
-      'stair_17chain': '432412043242043243043241525131151321251323251323243213154321154321154321'  // 17連鎖階段積み
-    };
-    
-    if (presets[presetType]) {
+    if (Config.presets[presetType]) {
       if (confirm('プリセットを読み込みますか？現在の盤面は失われます。')) {
-        this.loadFieldFromCode(presets[presetType]);
+        this.loadFieldFromCode(Config.presets[presetType]);
         alert('プリセットを読み込みました');
         document.querySelector('.modal').remove();
       }
