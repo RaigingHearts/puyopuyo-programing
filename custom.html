@@ -216,13 +216,39 @@
                 <!-- プリセットセクション -->
                 <div class="tools-section">
                     <h3>📋 プリセット</h3>
-                    <button class="tool-button load" onclick="CustomEditor.loadPreset('chain_seed_1')">2連鎖の種</button>
-                    <button class="tool-button load" onclick="CustomEditor.loadPreset('chain_seed_2')">3連鎖の種</button>
-                    <button class="tool-button load" onclick="CustomEditor.loadPreset('chain_seed_3')">4連鎖の種</button>
-                    <button class="tool-button load" onclick="CustomEditor.loadPreset('big_chain_1')">5連鎖</button>
-                    <button class="tool-button load" onclick="CustomEditor.loadPreset('big_chain_2')">7連鎖</button>
-                    <button class="tool-button load" onclick="CustomEditor.loadPreset('big_chain_3')">10連鎖</button>
-                    <button class="tool-button load" onclick="CustomEditor.loadPreset('test_17chain')" style="background-color: #e74c3c;">17連鎖テスト</button>
+                    <div style="margin-bottom: 10px;">
+                        <h4 style="margin: 5px 0; font-size: 14px; color: #3498db;">通常プリセット（テンプレート）</h4>
+                        <button class="tool-button load" onclick="CustomEditor.showPresetDetail('template_chain_seed')">連鎖の種テンプレート</button>
+                        <button class="tool-button load" onclick="CustomEditor.showPresetDetail('template_stair_chain')">階段積み連鎖テンプレート</button>
+                        <button class="tool-button load" onclick="CustomEditor.showPresetDetail('template_practical_chain')">実戦連鎖テンプレート</button>
+                        <button class="tool-button load" onclick="CustomEditor.showPresetDetail('template_advanced_chain')">高難度連鎖テンプレート</button>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <h4 style="margin: 5px 0; font-size: 14px; color: #e74c3c;">17連鎖階段積み</h4>
+                        <button class="tool-button load" onclick="CustomEditor.showPresetDetail('stair_17chain')" style="background-color: #e74c3c;">17連鎖階段積み</button>
+                    </div>
+                    <div>
+                        <h4 style="margin: 5px 0; font-size: 14px; color: #8e44ad;">連鎖ステップ（1-17連鎖）</h4>
+                        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; margin-top: 5px;">
+                            <button onclick="CustomEditor.showPresetDetail('step_1')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">1連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_2')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">2連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_3')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">3連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_4')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">4連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_5')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">5連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_6')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">6連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_7')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">7連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_8')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">8連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_9')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">9連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_10')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">10連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_11')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">11連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_12')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">12連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_13')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">13連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_14')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">14連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_15')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">15連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_16')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">16連鎖</button>
+                            <button onclick="CustomEditor.showPresetDetail('step_17')" style="padding: 4px; background-color: #8e44ad; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 10px;">17連鎖</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -248,7 +274,7 @@
     </div>
 
     <script>
-        // カスタムエディターの設定
+        // カスタムエディタの設定
         const STAGE_ROWS = 12;
         const STAGE_COLS = 6;
         const CELL_SIZE = 32;
@@ -763,6 +789,77 @@
                         this.loadFieldFromCode(Config.presets[presetType]);
                         alert('プリセットを読み込みました');
                     }
+                }
+            }
+
+            static showPresetDetail(presetType) {
+                const presetCode = Config.presets[presetType];
+                if (presetCode) {
+                    // モーダルダイアログを作成
+                    const modal = document.createElement('div');
+                    modal.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0,0,0,0.7);
+                        z-index: 1000;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    `;
+                    
+                    const modalContent = document.createElement('div');
+                    modalContent.style.cssText = `
+                        background-color: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        max-width: 500px;
+                        max-height: 80vh;
+                        overflow-y: auto;
+                    `;
+                    
+                    modalContent.innerHTML = `
+                        <h3 style="margin-top: 0;">プリセット詳細: ${presetType}</h3>
+                        <div style="margin-bottom: 15px;">
+                            <strong>フィールドコード:</strong><br>
+                            <textarea style="width:100%;height:60px;font-family:monospace;font-size:12px;margin-top:5px;" readonly>${presetCode}</textarea>
+                        </div>
+                        <div style="text-align: center;">
+                            <button onclick="CustomEditor.loadPreset('${presetType}'); document.body.removeChild(this.closest('.preset-modal'));" style="
+                                padding: 8px 16px; 
+                                background-color: #27ae60; 
+                                color: white; 
+                                border: none; 
+                                border-radius: 5px; 
+                                cursor: pointer;
+                                margin-right: 10px;
+                            ">読み込み</button>
+                            <button onclick="document.body.removeChild(this.closest('.preset-modal'))" style="
+                                padding: 8px 16px; 
+                                background-color: #e74c3c; 
+                                color: white; 
+                                border: none; 
+                                border-radius: 5px; 
+                                cursor: pointer;
+                            ">閉じる</button>
+                        </div>
+                    `;
+                    
+                    modal.className = 'preset-modal';
+                    modal.appendChild(modalContent);
+                    
+                    // 背景クリックで閉じる
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            document.body.removeChild(modal);
+                        }
+                    });
+                    
+                    document.body.appendChild(modal);
+                } else {
+                    alert(`プリセット「${presetType}」のデータが見つかりません。`);
                 }
             }
         }
