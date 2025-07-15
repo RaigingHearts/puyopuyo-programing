@@ -32,7 +32,7 @@ Thumbs.db
 *.log
 
 # プライベートファイル
-private.txt
+private.*
 *.private
 
 # 設定ファイル（個人設定）
