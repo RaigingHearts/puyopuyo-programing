@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src *
 'unsafe-inline' 'unsafe-eval'">
-    <title>ぷよぷよの制作を体験してみよう！ Ver.1.9</title>
-    <link rel="stylesheet" href="components/loader.css">
-    <link rel="stylesheet" href="css/style.css">
+    <title>ぷよぷよの制作を体験してみよう！ Ver.1.14</title>
+    <!-- Ver.1.14で修正: 存在しないCSSファイル参照を削除 -->
+    <!--<link rel="stylesheet" href="components/loader.css">-->
+    <!--<link rel="stylesheet" href="css/style.css">-->
 </head>
 
 <body style="margin:0; background-color: #f0f0f0; font-family: Arial, sans-serif;">
@@ -224,7 +225,8 @@
             <img src="img/font8.png" id="font8">
             <img src="img/font9.png" id="font9">
         </div>
-        <script src="components/loader.js"></script>
+        <!-- Ver.1.14で修正: 存在しないJSファイル参照を削除 -->
+        <!--<script src="components/loader.js"></script>-->
         <script src="src/config.js"></script>
         <script src="src/stage.js"></script>
         <script src="src/score.js"></script>
@@ -234,21 +236,35 @@
         <script src="src/sidemenu.js"></script>
         <script src="src/chain.js"></script>
         <script src="src/game.js"></script>
-        <!-- Ver.1.14で追加: スタート画面機能 -->
-        <script src="src/start.js"></script>
-        <!-- Ver.1.14で追加: 設定UI機能 -->
-        <script src="src/settings.js"></script>
-        <!-- Ver.1.14で追加: 拡張フィールドコード機能 -->
+        <!-- Ver.1.14で追加: 拡張機能（依存関係を考慮した順序） -->
         <script src="src/fieldcode.js"></script>
+        <script src="src/settings.js"></script>
+        <script src="src/start.js"></script>
         <script>
             // Ver.1.6で追加: サイドメニューの初期化
             // Ver.1.14で修正: スタート画面も初期化
             window.addEventListener('load', function() {
-                SideMenu.initialize();
-                // Ver.1.14で追加: 設定機能を初期化
-                Settings.initialize();
-                // Ver.1.14で追加: スタート画面を表示
-                StartScreen.initialize();
+                // Ver.1.14で修正: 初期化順序を調整
+                try {
+                    // 1. 設定機能を最初に初期化
+                    if (typeof Settings !== 'undefined') {
+                        Settings.initialize();
+                    }
+                    
+                    // 2. サイドメニューを初期化
+                    if (typeof SideMenu !== 'undefined') {
+                        SideMenu.initialize();
+                    }
+                    
+                    // 3. スタート画面を最後に表示
+                    if (typeof StartScreen !== 'undefined') {
+                        StartScreen.initialize();
+                    } else {
+                        console.error('StartScreen is not defined');
+                    }
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                }
             });
         </script>
 </body>
