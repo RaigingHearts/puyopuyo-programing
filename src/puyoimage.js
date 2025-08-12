@@ -6,16 +6,24 @@ class PuyoImage {
     this.puyoImages = [];
     for (let i = 0; i < 5; i++) {
       const image = document.getElementById(`puyo_${i + 1}`);
-      image.removeAttribute('id');
-      image.width = Config.puyoImgWidth;
-      image.height = Config.puyoImgHeight;
-      image.style.position = 'absolute';
-      this.puyoImages[i] = image;
+      if (image) {
+        image.removeAttribute('id');
+        image.width = Config.puyoImgWidth;
+        image.height = Config.puyoImgHeight;
+        image.style.position = 'absolute';
+        this.puyoImages[i] = image;
+      } else {
+        console.error(`Puyo image element puyo_${i + 1} not found`);
+      }
     }
     this.batankyuImage = document.getElementById('batankyu');
-    // Ver.1.14で修正: 可変グリッド対応 - 現在のステージ幅に合わせてサイズ調整
-    this.batankyuImage.width = Config.puyoImgWidth * Config.stageCols;
-    this.batankyuImage.style.position = 'absolute';
+    if (this.batankyuImage) {
+      // Ver.1.14で修正: ばたんきゅー演出も基準サイズで固定
+      this.batankyuImage.width = Config.puyoImgWidth * Config.baseCols;
+      this.batankyuImage.style.position = 'absolute';
+    } else {
+      console.error('Batankyu image element not found');
+    }
   }
   static getPuyo(index) {
     const image = this.puyoImages[index - 1].cloneNode(true);

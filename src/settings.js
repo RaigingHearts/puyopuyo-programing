@@ -33,7 +33,7 @@ let Settings = {
             this.defaultSettings.stageRows = Config.stageRows || 12;
             this.defaultSettings.stageCols = Config.stageCols || 6;
             this.defaultSettings.dropSpeed = Config.dropSpeed || 60;
-            this.defaultSettings.puyoColors = Config.puyoColors || 4;
+            this.defaultSettings.puyoColors = Config.puyoColors || 5;
             
             // 現在の設定もデフォルト値で初期化
             this.currentSettings = { ...this.defaultSettings };
@@ -374,36 +374,30 @@ let Settings = {
         }
     },
     
-    // Ver.1.14で追加: 演出画像のサイズを更新
+    // Ver.1.14で追加: 演出画像のサイズを更新（基準サイズで固定）
     updateEffectImageSizes: function() {
-        // 全消し演出画像のサイズ更新
+        // 全消し演出画像のサイズ更新（基準サイズで固定）
         const zenkeshiImage = document.getElementById('zenkeshi');
         if (zenkeshiImage) {
-            zenkeshiImage.width = Config.puyoImgWidth * Config.stageCols;
+            zenkeshiImage.width = Config.puyoImgWidth * Config.baseCols;
         }
         
-        // ばたんきゅー演出画像のサイズ更新
+        // ばたんきゅー演出画像のサイズ更新（基準サイズで固定）
         const batankyuImage = document.getElementById('batankyu');
         if (batankyuImage) {
-            batankyuImage.width = Config.puyoImgWidth * Config.stageCols;
+            batankyuImage.width = Config.puyoImgWidth * Config.baseCols;
         }
     },
     
     // ゲームを再初期化
     reinitializeGame: function() {
-        // ゲームループを一時停止
-        if (typeof Game !== 'undefined') {
-            Game.stop();
+        // Ver.1.14で修正: 安全な再初期化のためページリロードを使用
+        if (confirm('設定を適用するためにページを再読み込みします。よろしいですか？')) {
+            // 少し待ってからリロード（設定保存完了を確保）
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
         }
-        
-        // 少し待ってから再初期化
-        setTimeout(() => {
-            if (typeof Game !== 'undefined') {
-                Game.initialize();
-                Game.resume();
-                Game.start();
-            }
-        }, 100);
     },
     
     // クッキー操作

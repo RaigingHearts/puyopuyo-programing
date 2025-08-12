@@ -1,16 +1,19 @@
 // 設定を記載しておくクラス
 class Config {
 }
-Config.puyoImgWidth = 40; // ぷよぷよ画像の幅
-Config.puyoImgHeight = 40; // ぷよぷよ画像の高さ
-Config.fontHeight = 33;
+// Ver.1.14で修正: 描画サイズとグリッドサイズを分離
 Config.stageCols = 6; // ステージの横の個数
 Config.stageRows = 12; // ステージの縦の個数
-// フィールドサイズ追加
-// 高さが全部入るように調整
+
+// 基準描画サイズ（固定値・6x12グリッドベース）
+Config.baseCols = 6; // 描画サイズ計算の基準横グリッド数
+Config.baseRows = 12; // 描画サイズ計算の基準縦グリッド数
+Config.fontHeight = 33;
+
+// 実際の描画サイズ（常に基準グリッドサイズで計算）
 // Ver.1.4で変更: 盤面サイズを3%縮小（0.97倍）
 // RaigingHeartsによるさらなる調整: （デフォルト:1.0から0.85倍へ縮小）
-Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.stageRows * 0.85
+Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.baseRows * 0.85
 Config.puyoImgWidth = Config.puyoImgHeight;
 Config.stageBackgroundColor = '#ffffff'; // ステージの背景色
 Config.scoreBackgroundColor = '#24c0bb'; // スコアの背景色

@@ -207,11 +207,16 @@ class Player {
     Stage.stageElement.appendChild(this.ghostCenterPuyoElement);
     Stage.stageElement.appendChild(this.ghostMovablePuyoElement);
     // ぷよの初期配置を定める
+    // Ver.1.14で修正: 可変グリッド対応の初期位置計算
+    const startX = Math.floor(Config.stageCols / 2); // グリッドサイズに応じた中央位置
+    const offsetX = Stage.calculatePuyoOffsetX();
+    const offsetY = Stage.calculatePuyoOffsetY();
+    
     this.puyoStatus = {
-      x: 2, // 中心ぷよの位置: 左から2列目
+      x: startX, // 中心ぷよの位置: 中央列
       y: -1, // 画面上部ギリギリから出てくる
-      left: 2 * Config.puyoImgWidth,
-      top: -1 * Config.puyoImgHeight,
+      left: offsetX + startX * Config.puyoImgWidth,
+      top: offsetY + (-1) * Config.puyoImgHeight,
       dx: 0, // 動くぷよの相対位置: 動くぷよは上方向にある
       dy: -1,
       rotation: 90 // 動くぷよの角度は90度（上向き）

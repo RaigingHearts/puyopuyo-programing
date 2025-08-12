@@ -10,14 +10,15 @@ class Stage {
   static initialize() {
     // HTML からステージの元となる要素を取得し、大きさを設定する
     const stageElement = document.getElementById("stage");
-    stageElement.style.width = Config.puyoImgWidth * Config.stageCols + 'px';
-    stageElement.style.height = Config.puyoImgHeight * Config.stageRows + 'px';
+    // Ver.1.14で修正: 盤面の描画サイズを基準サイズで固定（グリッド変更時も維持）
+    stageElement.style.width = Config.puyoImgWidth * Config.baseCols + 'px';
+    stageElement.style.height = Config.puyoImgHeight * Config.baseRows + 'px';
     stageElement.style.backgroundColor = Config.stageBackgroundColor;
     this.stageElement = stageElement;
 
     const zenkeshiImage = document.getElementById("zenkeshi");
-    // Ver.1.14で修正: 可変グリッド対応 - 現在のステージ幅に合わせてサイズ調整
-    zenkeshiImage.width = Config.puyoImgWidth * Config.stageCols;
+    // Ver.1.14で修正: 全消し演出も基準サイズで固定
+    zenkeshiImage.width = Config.puyoImgWidth * Config.baseCols;
     zenkeshiImage.style.position = 'absolute';
     zenkeshiImage.style.display = 'none';
     this.zenkeshiImage = zenkeshiImage;
@@ -66,11 +67,29 @@ class Stage {
     this.puyoCount = puyoCount;
   }
   // 画面とメモリ両方に puyo をセットする
+  // Ver.1.14で追加: 可変グリッド対応の座標計算
+  static calculatePuyoOffsetX() {
+    // 盤面を中央寄せするためのX座標オフセット
+    const totalWidth = Config.puyoImgWidth * Config.baseCols;
+    const usedWidth = Config.puyoImgWidth * Config.stageCols;
+    return Math.max(0, (totalWidth - usedWidth) / 2);
+  }
+  
+  static calculatePuyoOffsetY() {
+    // 盤面を上詰めするためのY座標オフセット（通常は0）
+    const totalHeight = Config.puyoImgHeight * Config.baseRows;
+    const usedHeight = Config.puyoImgHeight * Config.stageRows;
+    return Math.max(0, totalHeight - usedHeight);
+  }
+
   static setPuyo(x, y, puyo) {
     // 画像を作成し配置する
     const puyoImage = PuyoImage.getPuyo(puyo);
-    puyoImage.style.left = x * Config.puyoImgWidth + "px";
-    puyoImage.style.top = y * Config.puyoImgHeight + "px";
+    // Ver.1.14で修正: 可変グリッドでも盤面中央配置を維持
+    const offsetX = this.calculatePuyoOffsetX();
+    const offsetY = this.calculatePuyoOffsetY();
+    puyoImage.style.left = (offsetX + x * Config.puyoImgWidth) + "px";
+    puyoImage.style.top = (offsetY + y * Config.puyoImgHeight) + "px";
     this.stageElement.appendChild(puyoImage);
     // メモリにセットする
     this.board[y][x] = {
