@@ -17,8 +17,8 @@ class Stage {
     this.stageElement = stageElement;
 
     const zenkeshiImage = document.getElementById("zenkeshi");
-    // Ver.1.14で修正: 全消し演出も基準サイズで固定
-    zenkeshiImage.width = Config.puyoImgWidth * Config.baseCols;
+    // Ver.1.14で修正: 全消し演出を実際の盤面サイズに合わせる
+    zenkeshiImage.width = Config.puyoImgWidth * Config.stageCols;
     zenkeshiImage.style.position = 'absolute';
     zenkeshiImage.style.display = 'none';
     this.zenkeshiImage = zenkeshiImage;
@@ -67,17 +67,17 @@ class Stage {
     this.puyoCount = puyoCount;
   }
   // 画面とメモリ両方に puyo をセットする
-  // Ver.1.14で追加: 可変グリッド対応の座標計算
+  // Ver.1.14で修正: 動的サイズ計算に対応した座標計算
   static calculatePuyoOffsetX() {
     // 盤面を中央寄せするためのX座標オフセット
-    const totalWidth = Config.puyoImgWidth * Config.baseCols;
+    const totalWidth = Config.basePuyoImgWidth * Config.baseCols;
     const usedWidth = Config.puyoImgWidth * Config.stageCols;
     return Math.max(0, (totalWidth - usedWidth) / 2);
   }
   
   static calculatePuyoOffsetY() {
-    // 盤面を上詰めするためのY座標オフセット（通常は0）
-    const totalHeight = Config.puyoImgHeight * Config.baseRows;
+    // 盤面を上詰めするためのY座標オフセット
+    const totalHeight = Config.basePuyoImgHeight * Config.baseRows;
     const usedHeight = Config.puyoImgHeight * Config.stageRows;
     return Math.max(0, totalHeight - usedHeight);
   }

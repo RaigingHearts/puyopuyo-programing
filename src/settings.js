@@ -369,23 +369,26 @@ let Settings = {
             Config.dropSpeed = this.currentSettings.dropSpeed;
             Config.puyoColors = this.currentSettings.puyoColors;
             
+            // Ver.1.14で追加: グリッドサイズ変更時にぷよサイズを再計算
+            Config.calculatePuyoSize();
+            
             // Ver.1.14で追加: 可変グリッド対応 - 演出画像のサイズも更新
             this.updateEffectImageSizes();
         }
     },
     
-    // Ver.1.14で追加: 演出画像のサイズを更新（基準サイズで固定）
+    // Ver.1.14で修正: 演出画像のサイズを実際の盤面サイズに更新
     updateEffectImageSizes: function() {
-        // 全消し演出画像のサイズ更新（基準サイズで固定）
+        // 全消し演出画像のサイズ更新（実際の盤面サイズに合わせる）
         const zenkeshiImage = document.getElementById('zenkeshi');
         if (zenkeshiImage) {
-            zenkeshiImage.width = Config.puyoImgWidth * Config.baseCols;
+            zenkeshiImage.width = Config.puyoImgWidth * Config.stageCols;
         }
         
-        // ばたんきゅー演出画像のサイズ更新（基準サイズで固定）
+        // ばたんきゅー演出画像のサイズ更新（実際の盤面サイズに合わせる）
         const batankyuImage = document.getElementById('batankyu');
         if (batankyuImage) {
-            batankyuImage.width = Config.puyoImgWidth * Config.baseCols;
+            batankyuImage.width = Config.puyoImgWidth * Config.stageCols;
         }
     },
     

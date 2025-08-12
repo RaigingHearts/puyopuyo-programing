@@ -18,8 +18,8 @@ class PuyoImage {
     }
     this.batankyuImage = document.getElementById('batankyu');
     if (this.batankyuImage) {
-      // Ver.1.14で修正: ばたんきゅー演出も基準サイズで固定
-      this.batankyuImage.width = Config.puyoImgWidth * Config.baseCols;
+      // Ver.1.14で修正: ばたんきゅー演出を実際の盤面サイズに合わせる
+      this.batankyuImage.width = Config.puyoImgWidth * Config.stageCols;
       this.batankyuImage.style.position = 'absolute';
     } else {
       console.error('Batankyu image element not found');

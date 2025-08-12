@@ -10,11 +10,31 @@ Config.baseCols = 6; // 描画サイズ計算の基準横グリッド数
 Config.baseRows = 12; // 描画サイズ計算の基準縦グリッド数
 Config.fontHeight = 33;
 
-// 実際の描画サイズ（常に基準グリッドサイズで計算）
+// 基準描画サイズ（固定盤面サイズ用）
 // Ver.1.4で変更: 盤面サイズを3%縮小（0.97倍）
 // RaigingHeartsによるさらなる調整: （デフォルト:1.0から0.85倍へ縮小）
-Config.puyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.baseRows * 0.85
-Config.puyoImgWidth = Config.puyoImgHeight;
+Config.basePuyoImgHeight = (window.innerHeight-Config.fontHeight)/Config.baseRows * 0.85
+Config.basePuyoImgWidth = Config.basePuyoImgHeight;
+
+// 実際の描画サイズ（グリッドサイズに応じて動的計算）
+Config.puyoImgHeight = Config.basePuyoImgHeight;
+Config.puyoImgWidth = Config.basePuyoImgWidth;
+
+// Ver.1.14で追加: 動的サイズ計算関数
+Config.calculatePuyoSize = function() {
+    // 現在のグリッドサイズに応じてぷよサイズを調整
+    const widthRatio = this.baseCols / this.stageCols;
+    const heightRatio = this.baseRows / this.stageRows;
+    
+    // より小さい比率を採用（盤面からはみ出さないように）
+    const ratio = Math.min(widthRatio, heightRatio);
+    
+    this.puyoImgWidth = this.basePuyoImgWidth * ratio;
+    this.puyoImgHeight = this.basePuyoImgHeight * ratio;
+};
+
+// 初期サイズ計算
+Config.calculatePuyoSize();
 Config.stageBackgroundColor = '#ffffff'; // ステージの背景色
 Config.scoreBackgroundColor = '#24c0bb'; // スコアの背景色
 Config.freeFallingSpeed = 16; // 自由落下のスピード
