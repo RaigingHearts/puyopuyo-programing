@@ -71,10 +71,13 @@ class NextPuyo {
     centerPuyoImg.width = Config.puyoImgWidth * scale;
     centerPuyoImg.height = Config.puyoImgHeight * scale;
     centerPuyoImg.style.position = 'absolute';
-    // Ver.1.4で変更: 位置を3%縮小に合わせて調整（20px → 19px、40px → 39px）
-    // RaigingHeartsによるさらなる調整: （left:15 top:30）
-    centerPuyoImg.style.left = '15px';
-    centerPuyoImg.style.top = '30px';
+    // Ver.1.14で修正: 可変グリッド対応 - NEXTエリアサイズに対して相対的に配置
+    const containerWidth = parseInt(containerElement.style.width) || 78;
+    const containerHeight = parseInt(containerElement.style.height) || 78;
+    const centerX = (containerWidth - centerPuyoImg.width) / 2;
+    const centerY = containerHeight - centerPuyoImg.height - 8;
+    centerPuyoImg.style.left = centerX + 'px';
+    centerPuyoImg.style.top = centerY + 'px';
     containerElement.appendChild(centerPuyoImg);
     
     // 動くぷよを表示（上に配置）
@@ -82,10 +85,11 @@ class NextPuyo {
     movablePuyoImg.width = Config.puyoImgWidth * scale;
     movablePuyoImg.height = Config.puyoImgHeight * scale;
     movablePuyoImg.style.position = 'absolute';
-    // Ver.1.4で変更: 位置を3%縮小に合わせて調整（20px → 19px、8pxは変更なし）
-    // RaigingHeartsによるさらなる調整: （left:15 top:0）
-    movablePuyoImg.style.left = '15px';
-    movablePuyoImg.style.top = '0px';
+    // Ver.1.14で修正: 可変グリッド対応 - 中心ぷよの上に配置
+    const movableX = (containerWidth - movablePuyoImg.width) / 2;
+    const movableY = centerY - movablePuyoImg.height;
+    movablePuyoImg.style.left = movableX + 'px';
+    movablePuyoImg.style.top = movableY + 'px';
     containerElement.appendChild(movablePuyoImg);
   }
   

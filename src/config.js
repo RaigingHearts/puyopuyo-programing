@@ -18,6 +18,7 @@ Config.freeFallingSpeed = 16; // 自由落下のスピード
 Config.erasePuyoCount = 4; // 何個以上揃ったら消えるか
 Config.eraseAnimationDuration = 30; // 何フレームでぷよを消すか
 Config.puyoColors = 5; // 何色のぷよを使うか
+Config.dropSpeed = 60; // Ver.1.14で追加: ぷよの落下速度（フレーム数）
 Config.playerFallingSpeed = 0.9; // プレイ中の自然落下のスピード
 Config.playerDownSpeed = 10; // プレイ中の下キー押下時の落下スピード
 Config.playerGroundFrame = 20; // 何フレーム接地したらぷよを固定するか

@@ -1,15 +1,43 @@
+// Ver.1.14で修正: スタート画面対応のため、自動開始を無効化
 // 起動されたときに呼ばれる関数を登録する
 window.addEventListener("load", () => {
+  // Ver.1.14で追加: スタート画面を表示（ゲーム本体は自動開始しない）
+  // スタート画面からゲーム開始される
+  
+  // 従来のコード（コメントアウト）
   // まずステージを整える
-  initialize();
+  // initialize();
   // ゲームを開始する
-  loop();
+  // loop();
 });
 let mode; // ゲームの現在の状況
 let frame; // ゲームの現在フレーム（1/60秒ごとに1追加される）
 let combinationCount = 0; // 何連鎖かどうか
 let isGameLoopStopped = false; // Ver.1.9で追加: ゲームループの完全停止フラグ
 let zenkeshiWaitStart = null;
+
+// Ver.1.14で追加: ゲーム制御オブジェクト
+let Game = {
+  // ゲーム初期化
+  initialize: function() {
+    initialize();
+  },
+  
+  // ゲーム開始
+  start: function() {
+    loop();
+  },
+  
+  // ゲーム停止
+  stop: function() {
+    isGameLoopStopped = true;
+  },
+  
+  // ゲーム再開
+  resume: function() {
+    isGameLoopStopped = false;
+  }
+};
 function initialize() {
   // 画像を準備する
   PuyoImage.initialize();

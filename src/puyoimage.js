@@ -13,7 +13,8 @@ class PuyoImage {
       this.puyoImages[i] = image;
     }
     this.batankyuImage = document.getElementById('batankyu');
-    this.batankyuImage.width = Config.puyoImgWidth * 6;
+    // Ver.1.14で修正: 可変グリッド対応 - 現在のステージ幅に合わせてサイズ調整
+    this.batankyuImage.width = Config.puyoImgWidth * Config.stageCols;
     this.batankyuImage.style.position = 'absolute';
   }
   static getPuyo(index) {

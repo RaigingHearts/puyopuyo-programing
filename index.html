@@ -13,7 +13,8 @@
 
 <body style="margin:0; background-color: #f0f0f0; font-family: Arial, sans-serif;">
     <!-- Ver.1.6で追加: メインレイアウトコンテナ -->
-    <div id="main-layout" style="display: flex; min-height: 100vh;">
+    <!-- Ver.1.14で修正: 初期状態ではゲーム領域を非表示 -->
+    <div id="main-layout" style="display: none; min-height: 100vh;">
         <!-- Ver.1.6で追加: レフトサイドメニュー -->
         <div id="left-sidebar" style="
             width: 280px; 
@@ -57,6 +58,7 @@
                 <h3 style="color: #f39c12; margin-bottom: 15px;">💾 データ管理</h3>
                 <label for="field-code-format" style="display:block; margin-bottom:4px; color:#333;">出力形式選択</label>
                 <select id="field-code-format" style="width:100%; padding:6px; margin-bottom:8px; border-radius:4px; border:1px solid #ccc;">
+                  <option value="extended">Ver.1.14拡張形式（可変グリッド対応）</option>
                   <option value="standard">標準形式（6×12, 0-6, 62進数）</option>
                   <option value="puyop">puyop.com形式（6×12, 1-6, 62進数）</option>
                   <option value="pndsng">pndsng.com形式（13×6, a-k, RLE圧縮）</option>
@@ -95,6 +97,22 @@
                     cursor: pointer;
                     font-size: 14px;
                 ">🌐 外部コード読み込み</button>
+
+                <!-- Ver.1.14で追加: ゲーム設定ボタン -->
+                <div class="menu-section" style="margin-top: 25px; border-top: 1px solid #34495e; padding-top: 15px;">
+                    <h3 style="color: #f39c12; margin-bottom: 15px;">⚙️ ゲーム設定</h3>
+                    <button id="btn-game-settings" style="
+                        width: 100%; 
+                        padding: 10px; 
+                        margin-bottom: 8px; 
+                        background-color: #9b59b6; 
+                        color: white; 
+                        border: none; 
+                        border-radius: 5px; 
+                        cursor: pointer; 
+                        font-size: 14px;
+                    ">⚙️ ゲーム設定</button>
+                </div>
             </div>
             
         </div>
@@ -216,10 +234,21 @@
         <script src="src/sidemenu.js"></script>
         <script src="src/chain.js"></script>
         <script src="src/game.js"></script>
+        <!-- Ver.1.14で追加: スタート画面機能 -->
+        <script src="src/start.js"></script>
+        <!-- Ver.1.14で追加: 設定UI機能 -->
+        <script src="src/settings.js"></script>
+        <!-- Ver.1.14で追加: 拡張フィールドコード機能 -->
+        <script src="src/fieldcode.js"></script>
         <script>
             // Ver.1.6で追加: サイドメニューの初期化
+            // Ver.1.14で修正: スタート画面も初期化
             window.addEventListener('load', function() {
                 SideMenu.initialize();
+                // Ver.1.14で追加: 設定機能を初期化
+                Settings.initialize();
+                // Ver.1.14で追加: スタート画面を表示
+                StartScreen.initialize();
             });
         </script>
 </body>

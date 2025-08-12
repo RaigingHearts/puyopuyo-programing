@@ -35,7 +35,10 @@ class SideMenu {
       exportBtn.addEventListener('click', () => {
         const format = document.getElementById('field-code-format').value;
         let code = '';
-        if (format === 'standard') {
+        if (format === 'extended') {
+          // Ver.1.14で追加: 拡張フィールドコード形式
+          code = FieldCode.generateExtendedCode();
+        } else if (format === 'standard') {
           code = SideMenu.encodeStandard();
         } else if (format === 'puyop') {
           code = SideMenu.encodePuyop();
@@ -43,6 +46,18 @@ class SideMenu {
           code = SideMenu.encodePndsng();
         }
         SideMenu.showExportCodeModal(code, format);
+      });
+    }
+    
+    // Ver.1.14で追加: ゲーム設定ボタン
+    const settingsBtn = document.getElementById('btn-game-settings');
+    if (settingsBtn) {
+      settingsBtn.addEventListener('click', () => {
+        if (typeof Settings !== 'undefined') {
+          Settings.showSettings();
+        } else {
+          alert('設定機能の読み込みに失敗しました');
+        }
       });
     }
   }
@@ -575,9 +590,27 @@ class SideMenu {
   // 外部フィールドコードの読み込み
   static importExternalField() {
     const code = document.getElementById('external-code').value.trim();
-    if (this.loadFieldFromCode(code)) {
-      alert('フィールドコードを読み込みました');
-      document.querySelector('.modal').remove();
+    
+    // Ver.1.14で追加: 拡張フィールドコード形式の対応
+    if (typeof FieldCode !== 'undefined' && code.startsWith(FieldCode.VERSION_HEADER)) {
+      // 拡張形式として読み込み
+      if (FieldCode.loadFromExtendedCode(code)) {
+        alert('拡張フィールドコードを読み込みました');
+        document.querySelector('.modal').remove();
+      }
+    } else if (typeof FieldCode !== 'undefined' && FieldCode.isLegacyFormat(code)) {
+      // 従来形式を拡張形式にアップグレードして読み込み
+      const upgradedCode = FieldCode.upgradeLegacyCode(code);
+      if (FieldCode.loadFromExtendedCode(upgradedCode)) {
+        alert('従来形式のフィールドコードを読み込みました（拡張形式に変換）');
+        document.querySelector('.modal').remove();
+      }
+    } else {
+      // 従来の読み込み方式
+      if (this.loadFieldFromCode(code)) {
+        alert('フィールドコードを読み込みました');
+        document.querySelector('.modal').remove();
+      }
     }
   }
   
@@ -685,13 +718,23 @@ class SideMenu {
   // 出力コード表示用モーダル
   static showExportCodeModal(code, format) {
     const formatLabel = {
+      'extended': 'Ver.1.14拡張形式',
       'standard': '標準形式',
       'puyop': 'puyop.com形式',
       'pndsng': 'pndsng.com形式'
     };
+    
+    let description = '';
+    if (format === 'extended') {
+      description = `<p style="font-size:12px;color:#666;margin:0 0 10px 0;">
+        🔧 Ver.1.14拡張形式：可変グリッド設定、圧縮データ、従来形式との互換性を提供<br>
+        📊 グリッド: ${Config.stageCols}×${Config.stageRows}, 色数: ${Config.puyoColors}, 速度: ${Config.dropSpeed}
+      </p>`;
+    }
+    
     const modal = this.createModal(
       `フィールドコード出力（${formatLabel[format] || format}）`,
-      `<textarea style='width:100%;height:80px;font-size:16px;'>${code}</textarea>`
+      `${description}<textarea style='width:100%;height:80px;font-size:14px;'>${code}</textarea>`
     );
     document.body.appendChild(modal);
   }
